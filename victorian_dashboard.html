@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Victorian Industrial Britain — Data Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Playfair+Display:wght@400;700;900&family=Crimson+Text:wght@400;600&display=swap');
+
+  :root {
+    --bg-dark: #0d0905;
+    --bg-panel: #1a1108;
+    --bg-card: #211508;
+    --gold: #c9a84c;
+    --gold-light: #e8cb7a;
+    --gold-dim: #7a6128;
+    --cream: #f0e6c8;
+    --cream-dim: #b8a882;
+    --red: #8b1a1a;
+    --border: #3d2b0e;
+    --border-gold: rgba(201,168,76,0.35);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--bg-dark);
+    color: var(--cream);
+    font-family: 'Crimson Text', Georgia, serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at top, rgba(90,60,10,0.15) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(201,168,76,0.04) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(201,168,76,0.04) 40px);
+  }
+
+  .header {
+    text-align: center;
+    padding: 32px 24px 20px;
+    border-bottom: 2px solid var(--border-gold);
+    background: linear-gradient(180deg, rgba(80,50,5,0.4) 0%, transparent 100%);
+    position: relative;
+  }
+  .header::before, .header::after {
+    content: "❧";
+    color: var(--gold);
+    font-size: 1.6rem;
+    position: absolute;
+    top: 36px;
+  }
+  .header::before { left: 40px; }
+  .header::after { right: 40px; }
+  .header .ornament {
+    color: var(--gold);
+    font-size: 0.95rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
+    font-weight: 900;
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+    text-shadow: 0 2px 20px rgba(201,168,76,0.4), 0 0 60px rgba(201,168,76,0.15);
+    line-height: 1.2;
+  }
+  .header .subtitle {
+    color: var(--cream-dim);
+    font-style: italic;
+    font-size: 1.05rem;
+    margin-top: 6px;
+  }
+  .header .divider {
+    margin: 14px auto 0;
+    width: 320px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), var(--gold), var(--gold-dim), transparent);
+  }
+
+  .dashboard { max-width: 1400px; margin: 0 auto; padding: 24px 20px 40px; }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-gold);
+    border-radius: 4px;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(201,168,76,0.1);
+  }
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 140px;
+  }
+  .filter-group label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+  }
+  .filter-group select {
+    background: var(--bg-dark);
+    color: var(--cream);
+    border: 1px solid var(--border-gold);
+    padding: 7px 10px;
+    border-radius: 2px;
+    font-family: 'Crimson Text', serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .filter-group select:hover, .filter-group select:focus { border-color: var(--gold); }
+  .filter-group select option { background: #1a1108; color: var(--cream); }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(201,168,76,0.6);
+  }
+  .filter-reset {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    padding: 7px 18px;
+    font-family: 'Crimson Text', serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    border-radius: 2px;
+    transition: all 0.2s;
+    align-self: flex-end;
+    white-space: nowrap;
+  }
+  .filter-reset:hover { background: rgba(201,168,76,0.12); border-color: var(--gold); }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-gold);
+    border-radius: 4px;
+    padding: 16px 20px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .stat-card .stat-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .stat-card .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+  .stat-card .stat-sub {
+    font-size: 0.8rem;
+    color: var(--cream-dim);
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .chart-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-gold);
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    position: relative;
+  }
+  .chart-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+  .chart-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .chart-card .chart-sub {
+    font-size: 0.8rem;
+    color: var(--cream-dim);
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+  .chart-card canvas { max-height: 280px; }
+
+  .table-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-gold);
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    margin-bottom: 24px;
+  }
+  .table-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+  }
+  .table-card .chart-sub {
+    font-size: 0.8rem;
+    color: var(--cream-dim);
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+  .table-wrapper { overflow-x: auto; max-height: 320px; overflow-y: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  thead th {
+    position: sticky; top: 0;
+    background: var(--bg-dark);
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.72rem;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-gold);
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  thead th:hover { color: var(--gold-light); }
+  thead th .sort-icon { margin-left: 4px; opacity: 0.5; font-size: 0.65rem; }
+  thead th.active .sort-icon { opacity: 1; color: var(--gold-light); }
+  tbody tr { border-bottom: 1px solid rgba(61,43,14,0.5); transition: background 0.15s; }
+  tbody tr:hover { background: rgba(201,168,76,0.06); }
+  tbody td { padding: 8px 12px; color: var(--cream-dim); }
+  tbody td:first-child { color: var(--cream); }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .badge-Textiles { background: rgba(100,160,220,0.2); color: #82b5e0; border: 1px solid rgba(100,160,220,0.3); }
+  .badge-Steel { background: rgba(180,140,200,0.2); color: #c9a8e0; border: 1px solid rgba(180,140,200,0.3); }
+  .badge-Coal { background: rgba(150,150,150,0.2); color: #b8b8b8; border: 1px solid rgba(150,150,150,0.3); }
+  .badge-Railways { background: rgba(220,160,80,0.2); color: #e0bb70; border: 1px solid rgba(220,160,80,0.3); }
+  .badge-Shipbuilding { background: rgba(80,180,160,0.2); color: #70c8b8; border: 1px solid rgba(80,180,160,0.3); }
+  .table-info { margin-top: 10px; font-size: 0.8rem; color: var(--cream-dim); font-style: italic; }
+
+  .footer {
+    text-align: center;
+    color: var(--gold-dim);
+    font-style: italic;
+    font-size: 0.85rem;
+    padding: 16px;
+    border-top: 1px solid var(--border-gold);
+    margin-top: 8px;
+  }
+
+  @media (max-width: 900px) {
+    .chart-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="ornament">&#9670; An Historical Survey of Industry &#9670;</div>
+  <h1>Victorian Industrial Britain</h1>
+  <div class="subtitle">Factory Labour, Industrial Output &amp; Wages, 1837–1900</div>
+  <div class="divider"></div>
+</div>
+
+<div class="dashboard">
+
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>City</label>
+      <select id="fCity">
+        <option value="">All Cities</option>
+        <option>Birmingham</option><option>Bristol</option><option>Edinburgh</option>
+        <option>Glasgow</option><option>Leeds</option><option>Liverpool</option>
+        <option>London</option><option>Manchester</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Industry</label>
+      <select id="fIndustry">
+        <option value="">All Industries</option>
+        <option>Coal Mining</option><option>Railways</option><option>Shipbuilding</option>
+        <option>Steel</option><option>Textiles</option>
+      </select>
+    </div>
+    <div class="filter-group" style="min-width:200px">
+      <label>Year: <span id="yearLabel">1837 – 1900</span></label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="range" id="fYearMin" min="1837" max="1900" value="1837" step="1">
+        <input type="range" id="fYearMax" min="1837" max="1900" value="1900" step="1">
+      </div>
+    </div>
+    <button class="filter-reset" onclick="resetFilters()">↺ Reset Filters</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Total Records</div>
+      <div class="stat-value" id="kpiRecords">850</div>
+      <div class="stat-sub">observations</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Workers</div>
+      <div class="stat-value" id="kpiWorkers">—</div>
+      <div class="stat-sub">factory labourers</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg. Output</div>
+      <div class="stat-value" id="kpiOutput">—</div>
+      <div class="stat-sub">tonnes per record</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg. Wage</div>
+      <div class="stat-value" id="kpiWage">—</div>
+      <div class="stat-sub">pence per week</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Factory Workers by City</h3>
+      <div class="chart-sub">Total workers aggregated across all years and industries</div>
+      <canvas id="chartCity"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Industrial Output Over Time</h3>
+      <div class="chart-sub">Average output in tonnes by decade</div>
+      <canvas id="chartLine"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Average Wage by Industry</h3>
+      <div class="chart-sub">Mean weekly wage in pence across the Victorian period</div>
+      <canvas id="chartWage"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Workers by Industry</h3>
+      <div class="chart-sub">Proportional share of the industrial workforce</div>
+      <canvas id="chartDonut"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card" style="margin-bottom:24px">
+    <h3>Output vs. Workforce Size</h3>
+    <div class="chart-sub">Each point represents one record — coloured by industry</div>
+    <canvas id="chartScatter" style="max-height:300px"></canvas>
+  </div>
+
+  <div class="table-card">
+    <h3>Record Ledger</h3>
+    <div class="chart-sub">Click column headers to sort · Showing filtered results</div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortTable('city')" id="th-city">City <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('year')" id="th-year">Year <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('industry')" id="th-industry">Industry <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('workers')" id="th-workers">Workers <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('output')" id="th-output">Output (t) <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('wage')" id="th-wage">Wage (d) <span class="sort-icon">↕</span></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="table-info" id="tableInfo"></div>
+  </div>
+
+</div>
+
+<div class="footer">
+  &#9670; &nbsp; Victorian Industrial Britain Dashboard &nbsp;·&nbsp; Data spanning 1837–1900 &nbsp;·&nbsp; 850 observations &nbsp; &#9670;
+</div>
+
+<script>
+const ALL_DATA = [{"city": "Glasgow", "year": 1877, "industry": "Shipbuilding", "workers": 38201, "output": 285312, "wage": 148}, {"city": "Manchester", "year": 1843, "industry": "Textiles", "workers": 10983, "output": 299857, "wage": 94}, {"city": "Bristol", "year": 1877, "industry": "Shipbuilding", "workers": 14802, "output": 47286, "wage": 98}, {"city": "Bristol", "year": 1858, "industry": "Textiles", "workers": 468, "output": 26391, "wage": 115}, {"city": "Glasgow", "year": 1886, "industry": "Steel", "workers": 32541, "output": 207168, "wage": 12}, {"city": "Manchester", "year": 1861, "industry": "Shipbuilding", "workers": 1431, "output": 237455, "wage": 110}, {"city": "Manchester", "year": 1886, "industry": "Railways", "workers": 38670, "output": 137277, "wage": 41}, {"city": "Liverpool", "year": 1892, "industry": "Textiles", "workers": 34422, "output": 95904, "wage": 87}, {"city": "Liverpool", "year": 1852, "industry": "Railways", "workers": 39995, "output": 74800, "wage": 38}, {"city": "London", "year": 1848, "industry": "Coal Mining", "workers": 47289, "output": 42866, "wage": 74}, {"city": "Liverpool", "year": 1883, "industry": "Shipbuilding", "workers": 23966, "output": 164502, "wage": 65}, {"city": "London", "year": 1861, "industry": "Textiles", "workers": 22321, "output": 238323, "wage": 76}, {"city": "Manchester", "year": 1855, "industry": "Railways", "workers": 15883, "output": 225483, "wage": 86}, {"city": "Glasgow", "year": 1861, "industry": "Steel", "workers": 18516, "output": 136432, "wage": 139}, {"city": "Birmingham", "year": 1860, "industry": "Coal Mining", "workers": 29857, "output": 77820, "wage": 5}, {"city": "Liverpool", "year": 1871, "industry": "Coal Mining", "workers": 48795, "output": 127555, "wage": 16}, {"city": "Leeds", "year": 1842, "industry": "Railways", "workers": 16607, "output": 294893, "wage": 61}, {"city": "Manchester", "year": 1851, "industry": "Shipbuilding", "workers": 36294, "output": 124568, "wage": 13}, {"city": "Birmingham", "year": 1892, "industry": "Steel", "workers": 31517, "output": 44553, "wage": 131}, {"city": "Bristol", "year": 1868, "industry": "Railways", "workers": 19210, "output": 241634, "wage": 56}, {"city": "Glasgow", "year": 1884, "industry": "Railways", "workers": 193, "output": 240249, "wage": 86}, {"city": "Bristol", "year": 1894, "industry": "Railways", "workers": 27521, "output": 230773, "wage": 41}, {"city": "Manchester", "year": 1876, "industry": "Railways", "workers": 12167, "output": 247976, "wage": 43}, {"city": "Glasgow", "year": 1900, "industry": "Railways", "workers": 13789, "output": 9217, "wage": 72}, {"city": "Birmingham", "year": 1887, "industry": "Railways", "workers": 105, "output": 41481, "wage": 10}, {"city": "Liverpool", "year": 1893, "industry": "Steel", "workers": 36856, "output": 230653, "wage": 57}, {"city": "Manchester", "year": 1875, "industry": "Steel", "workers": 46544, "output": 241652, "wage": 81}, {"city": "Liverpool", "year": 1891, "industry": "Railways", "workers": 8904, "output": 62584, "wage": 139}, {"city": "London", "year": 1889, "industry": "Steel", "workers": 12242, "output": 185733, "wage": 5}, {"city": "Manchester", "year": 1854, "industry": "Textiles", "workers": 40132, "output": 291453, "wage": 93}, {"city": "Birmingham", "year": 1899, "industry": "Textiles", "workers": 42556, "output": 83181, "wage": 17}, {"city": "Bristol", "year": 1871, "industry": "Coal Mining", "workers": 40463, "output": 261578, "wage": 60}, {"city": "Manchester", "year": 1877, "industry": "Textiles", "workers": 21068, "output": 264536, "wage": 68}, {"city": "Edinburgh", "year": 1837, "industry": "Coal Mining", "workers": 36815, "output": 256356, "wage": 64}, {"city": "Leeds", "year": 1856, "industry": "Steel", "workers": 26114, "output": 49548, "wage": 121}, {"city": "Edinburgh", "year": 1875, "industry": "Railways", "workers": 13178, "output": 290609, "wage": 39}, {"city": "London", "year": 1864, "industry": "Railways", "workers": 36922, "output": 195708, "wage": 91}, {"city": "Manchester", "year": 1865, "industry": "Textiles", "workers": 26324, "output": 191839, "wage": 62}, {"city": "Leeds", "year": 1842, "industry": "Steel", "workers": 19342, "output": 68062, "wage": 83}, {"city": "Manchester", "year": 1862, "industry": "Shipbuilding", "workers": 728, "output": 28494, "wage": 37}, {"city": "Glasgow", "year": 1840, "industry": "Railways", "workers": 12465, "output": 46886, "wage": 29}, {"city": "Birmingham", "year": 1843, "industry": "Steel", "workers": 410, "output": 264173, "wage": 36}, {"city": "Leeds", "year": 1857, "industry": "Railways", "workers": 23474, "output": 270404, "wage": 81}, {"city": "Glasgow", "year": 1847, "industry": "Textiles", "workers": 27030, "output": 55077, "wage": 72}, {"city": "Birmingham", "year": 1838, "industry": "Shipbuilding", "workers": 9775, "output": 299858, "wage": 95}, {"city": "Birmingham", "year": 1876, "industry": "Railways", "workers": 9804, "output": 77920, "wage": 53}, {"city": "Manchester", "year": 1894, "industry": "Steel", "workers": 47296, "output": 142501, "wage": 92}, {"city": "Manchester", "year": 1858, "industry": "Coal Mining", "workers": 428, "output": 272475, "wage": 63}, {"city": "Edinburgh", "year": 1850, "industry": "Railways", "workers": 27501, "output": 193293, "wage": 15}, {"city": "Liverpool", "year": 1874, "industry": "Coal Mining", "workers": 4628, "output": 179379, "wage": 34}, {"city": "Leeds", "year": 1848, "industry": "Steel", "workers": 6891, "output": 39659, "wage": 26}, {"city": "Birmingham", "year": 1891, "industry": "Railways", "workers": 16046, "output": 120787, "wage": 99}, {"city": "Liverpool", "year": 1862, "industry": "Shipbuilding", "workers": 14673, "output": 202973, "wage": 84}, {"city": "Glasgow", "year": 1892, "industry": "Textiles", "workers": 16064, "output": 15372, "wage": 126}, {"city": "Glasgow", "year": 1891, "industry": "Textiles", "workers": 40243, "output": 155912, "wage": 59}, {"city": "Liverpool", "year": 1890, "industry": "Steel", "workers": 19473, "output": 80785, "wage": 29}, {"city": "London", "year": 1841, "industry": "Shipbuilding", "workers": 45650, "output": 65425, "wage": 31}, {"city": "Leeds", "year": 1878, "industry": "Shipbuilding", "workers": 10670, "output": 103826, "wage": 33}, {"city": "Bristol", "year": 1837, "industry": "Textiles", "workers": 29480, "output": 22616, "wage": 83}, {"city": "Bristol", "year": 1867, "industry": "Coal Mining", "workers": 33443, "output": 14408, "wage": 128}, {"city": "Leeds", "year": 1889, "industry": "Steel", "workers": 12307, "output": 189880, "wage": 43}, {"city": "Manchester", "year": 1874, "industry": "Shipbuilding", "workers": 16573, "output": 167386, "wage": 148}, {"city": "Glasgow", "year": 1865, "industry": "Railways", "workers": 33788, "output": 120845, "wage": 28}, {"city": "Manchester", "year": 1846, "industry": "Steel", "workers": 48682, "output": 260936, "wage": 99}, {"city": "Edinburgh", "year": 1900, "industry": "Textiles", "workers": 14884, "output": 78932, "wage": 63}, {"city": "Manchester", "year": 1854, "industry": "Railways", "workers": 13667, "output": 77198, "wage": 85}, {"city": "London", "year": 1899, "industry": "Steel", "workers": 44478, "output": 44940, "wage": 52}, {"city": "Leeds", "year": 1852, "industry": "Steel", "workers": 2871, "output": 108655, "wage": 15}, {"city": "Glasgow", "year": 1890, "industry": "Coal Mining", "workers": 19887, "output": 162437, "wage": 138}, {"city": "Leeds", "year": 1888, "industry": "Railways", "workers": 24932, "output": 15244, "wage": 19}, {"city": "Manchester", "year": 1890, "industry": "Textiles", "workers": 320, "output": 247569, "wage": 57}, {"city": "Bristol", "year": 1876, "industry": "Steel", "workers": 5404, "output": 152471, "wage": 34}, {"city": "Birmingham", "year": 1853, "industry": "Coal Mining", "workers": 6631, "output": 112218, "wage": 8}, {"city": "Birmingham", "year": 1880, "industry": "Textiles", "workers": 18801, "output": 50296, "wage": 10}, {"city": "Leeds", "year": 1894, "industry": "Railways", "workers": 37574, "output": 251896, "wage": 72}, {"city": "Edinburgh", "year": 1861, "industry": "Textiles", "workers": 28826, "output": 15093, "wage": 17}, {"city": "Leeds", "year": 1895, "industry": "Railways", "workers": 8496, "output": 106603, "wage": 113}, {"city": "Glasgow", "year": 1875, "industry": "Textiles", "workers": 6583, "output": 148396, "wage": 5}, {"city": "Leeds", "year": 1875, "industry": "Railways", "workers": 27920, "output": 282503, "wage": 43}, {"city": "Birmingham", "year": 1880, "industry": "Steel", "workers": 28526, "output": 206811, "wage": 129}, {"city": "London", "year": 1854, "industry": "Railways", "workers": 6245, "output": 62162, "wage": 121}, {"city": "Manchester", "year": 1881, "industry": "Textiles", "workers": 29143, "output": 107279, "wage": 45}, {"city": "Liverpool", "year": 1890, "industry": "Shipbuilding", "workers": 41736, "output": 183944, "wage": 131}, {"city": "Manchester", "year": 1857, "industry": "Textiles", "workers": 23496, "output": 145892, "wage": 73}, {"city": "London", "year": 1846, "industry": "Textiles", "workers": 49495, "output": 248771, "wage": 143}, {"city": "Manchester", "year": 1868, "industry": "Textiles", "workers": 22529, "output": 161706, "wage": 34}, {"city": "Leeds", "year": 1844, "industry": "Shipbuilding", "workers": 35142, "output": 172854, "wage": 149}, {"city": "Manchester", "year": 1863, "industry": "Textiles", "workers": 48105, "output": 180856, "wage": 21}, {"city": "Birmingham", "year": 1892, "industry": "Textiles", "workers": 31713, "output": 243247, "wage": 89}, {"city": "London", "year": 1859, "industry": "Steel", "workers": 1822, "output": 36430, "wage": 142}, {"city": "Birmingham", "year": 1895, "industry": "Coal Mining", "workers": 42331, "output": 35704, "wage": 131}, {"city": "Edinburgh", "year": 1900, "industry": "Shipbuilding", "workers": 11388, "output": 45968, "wage": 87}, {"city": "Leeds", "year": 1869, "industry": "Shipbuilding", "workers": 278, "output": 254169, "wage": 83}, {"city": "Glasgow", "year": 1841, "industry": "Textiles", "workers": 47893, "output": 264988, "wage": 124}, {"city": "Glasgow", "year": 1855, "industry": "Shipbuilding", "workers": 220, "output": 153650, "wage": 32}, {"city": "Edinburgh", "year": 1856, "industry": "Shipbuilding", "workers": 32832, "output": 63652, "wage": 132}, {"city": "London", "year": 1882, "industry": "Railways", "workers": 35152, "output": 171795, "wage": 40}, {"city": "Bristol", "year": 1847, "industry": "Coal Mining", "workers": 12513, "output": 256686, "wage": 88}, {"city": "Leeds", "year": 1868, "industry": "Shipbuilding", "workers": 26637, "output": 210402, "wage": 63}, {"city": "London", "year": 1843, "industry": "Coal Mining", "workers": 6386, "output": 232153, "wage": 15}, {"city": "Edinburgh", "year": 1880, "industry": "Shipbuilding", "workers": 46135, "output": 259606, "wage": 58}, {"city": "Glasgow", "year": 1897, "industry": "Steel", "workers": 42860, "output": 296762, "wage": 131}, {"city": "Glasgow", "year": 1888, "industry": "Coal Mining", "workers": 21221, "output": 220292, "wage": 98}, {"city": "Liverpool", "year": 1878, "industry": "Railways", "workers": 42752, "output": 189061, "wage": 133}, {"city": "Glasgow", "year": 1843, "industry": "Shipbuilding", "workers": 18194, "output": 122556, "wage": 86}, {"city": "Leeds", "year": 1874, "industry": "Textiles", "workers": 24882, "output": 10466, "wage": 17}, {"city": "Leeds", "year": 1880, "industry": "Shipbuilding", "workers": 36981, "output": 215735, "wage": 49}, {"city": "Glasgow", "year": 1874, "industry": "Shipbuilding", "workers": 15486, "output": 159971, "wage": 110}, {"city": "Edinburgh", "year": 1884, "industry": "Shipbuilding", "workers": 28299, "output": 187300, "wage": 15}, {"city": "Leeds", "year": 1862, "industry": "Coal Mining", "workers": 39121, "output": 249255, "wage": 110}, {"city": "Manchester", "year": 1855, "industry": "Shipbuilding", "workers": 45365, "output": 65033, "wage": 66}, {"city": "Edinburgh", "year": 1852, "industry": "Coal Mining", "workers": 10013, "output": 146640, "wage": 122}, {"city": "Leeds", "year": 1886, "industry": "Railways", "workers": 45433, "output": 175469, "wage": 65}, {"city": "Leeds", "year": 1865, "industry": "Steel", "workers": 42017, "output": 157624, "wage": 127}, {"city": "Leeds", "year": 1884, "industry": "Steel", "workers": 2534, "output": 263036, "wage": 113}, {"city": "Glasgow", "year": 1842, "industry": "Steel", "workers": 19169, "output": 150151, "wage": 18}, {"city": "Edinburgh", "year": 1844, "industry": "Shipbuilding", "workers": 9279, "output": 255456, "wage": 83}, {"city": "Birmingham", "year": 1849, "industry": "Coal Mining", "workers": 25580, "output": 288425, "wage": 74}, {"city": "Leeds", "year": 1896, "industry": "Steel", "workers": 26096, "output": 78858, "wage": 121}, {"city": "London", "year": 1873, "industry": "Railways", "workers": 28185, "output": 68552, "wage": 129}, {"city": "Birmingham", "year": 1885, "industry": "Steel", "workers": 23744, "output": 93299, "wage": 102}, {"city": "Birmingham", "year": 1856, "industry": "Shipbuilding", "workers": 48908, "output": 293221, "wage": 41}, {"city": "Birmingham", "year": 1876, "industry": "Textiles", "workers": 986, "output": 77154, "wage": 113}, {"city": "Manchester", "year": 1869, "industry": "Steel", "workers": 20680, "output": 37522, "wage": 121}, {"city": "Bristol", "year": 1890, "industry": "Shipbuilding", "workers": 5664, "output": 145692, "wage": 5}, {"city": "London", "year": 1841, "industry": "Shipbuilding", "workers": 1010, "output": 161982, "wage": 120}, {"city": "Edinburgh", "year": 1898, "industry": "Textiles", "workers": 14496, "output": 161319, "wage": 110}, {"city": "Bristol", "year": 1887, "industry": "Steel", "workers": 22733, "output": 282877, "wage": 102}, {"city": "Bristol", "year": 1879, "industry": "Steel", "workers": 16162, "output": 142660, "wage": 16}, {"city": "Bristol", "year": 1898, "industry": "Railways", "workers": 5045, "output": 249576, "wage": 54}, {"city": "Manchester", "year": 1890, "industry": "Shipbuilding", "workers": 24433, "output": 224420, "wage": 47}, {"city": "Birmingham", "year": 1844, "industry": "Steel", "workers": 2638, "output": 121551, "wage": 10}, {"city": "Manchester", "year": 1889, "industry": "Steel", "workers": 25666, "output": 220604, "wage": 142}, {"city": "Manchester", "year": 1839, "industry": "Coal Mining", "workers": 1486, "output": 79455, "wage": 20}, {"city": "Leeds", "year": 1879, "industry": "Textiles", "workers": 14439, "output": 197335, "wage": 15}, {"city": "Leeds", "year": 1860, "industry": "Railways", "workers": 5831, "output": 48917, "wage": 140}, {"city": "Bristol", "year": 1874, "industry": "Textiles", "workers": 3227, "output": 166815, "wage": 19}, {"city": "Glasgow", "year": 1849, "industry": "Coal Mining", "workers": 41963, "output": 57326, "wage": 85}, {"city": "Birmingham", "year": 1881, "industry": "Coal Mining", "workers": 24054, "output": 78533, "wage": 143}, {"city": "Birmingham", "year": 1869, "industry": "Coal Mining", "workers": 7389, "output": 260775, "wage": 139}, {"city": "Manchester", "year": 1878, "industry": "Steel", "workers": 43249, "output": 277710, "wage": 32}, {"city": "Manchester", "year": 1869, "industry": "Textiles", "workers": 46974, "output": 58408, "wage": 55}, {"city": "London", "year": 1840, "industry": "Textiles", "workers": 43494, "output": 50716, "wage": 145}, {"city": "London", "year": 1858, "industry": "Shipbuilding", "workers": 11376, "output": 289896, "wage": 132}, {"city": "Birmingham", "year": 1864, "industry": "Steel", "workers": 33801, "output": 69178, "wage": 39}, {"city": "Birmingham", "year": 1863, "industry": "Railways", "workers": 135, "output": 127616, "wage": 93}, {"city": "Manchester", "year": 1898, "industry": "Railways", "workers": 20692, "output": 274412, "wage": 47}, {"city": "Glasgow", "year": 1840, "industry": "Shipbuilding", "workers": 19128, "output": 27340, "wage": 115}, {"city": "Liverpool", "year": 1890, "industry": "Coal Mining", "workers": 31110, "output": 15918, "wage": 21}, {"city": "London", "year": 1891, "industry": "Steel", "workers": 29160, "output": 66483, "wage": 90}, {"city": "Liverpool", "year": 1879, "industry": "Textiles", "workers": 41578, "output": 12576, "wage": 109}, {"city": "Manchester", "year": 1874, "industry": "Shipbuilding", "workers": 30551, "output": 2730, "wage": 101}, {"city": "Edinburgh", "year": 1851, "industry": "Textiles", "workers": 26945, "output": 172731, "wage": 81}, {"city": "Bristol", "year": 1865, "industry": "Textiles", "workers": 32176, "output": 117592, "wage": 63}, {"city": "Edinburgh", "year": 1858, "industry": "Textiles", "workers": 10048, "output": 195703, "wage": 137}, {"city": "Edinburgh", "year": 1890, "industry": "Coal Mining", "workers": 35823, "output": 271864, "wage": 89}, {"city": "Edinburgh", "year": 1870, "industry": "Railways", "workers": 8596, "output": 159822, "wage": 23}, {"city": "Bristol", "year": 1859, "industry": "Coal Mining", "workers": 18763, "output": 273804, "wage": 109}, {"city": "Manchester", "year": 1881, "industry": "Coal Mining", "workers": 37822, "output": 73265, "wage": 97}, {"city": "Leeds", "year": 1857, "industry": "Railways", "workers": 44534, "output": 280030, "wage": 70}, {"city": "London", "year": 1844, "industry": "Railways", "workers": 26779, "output": 113736, "wage": 7}, {"city": "London", "year": 1865, "industry": "Shipbuilding", "workers": 38380, "output": 260299, "wage": 98}, {"city": "Liverpool", "year": 1847, "industry": "Coal Mining", "workers": 6847, "output": 170044, "wage": 111}, {"city": "Birmingham", "year": 1847, "industry": "Steel", "workers": 10988, "output": 19030, "wage": 69}, {"city": "Edinburgh", "year": 1854, "industry": "Textiles", "workers": 27346, "output": 170330, "wage": 76}, {"city": "London", "year": 1849, "industry": "Steel", "workers": 49284, "output": 118098, "wage": 118}, {"city": "Manchester", "year": 1870, "industry": "Steel", "workers": 32128, "output": 172921, "wage": 137}, {"city": "Leeds", "year": 1867, "industry": "Steel", "workers": 31576, "output": 261298, "wage": 80}, {"city": "Birmingham", "year": 1883, "industry": "Railways", "workers": 35350, "output": 116955, "wage": 89}, {"city": "Liverpool", "year": 1858, "industry": "Shipbuilding", "workers": 8922, "output": 88669, "wage": 10}, {"city": "Liverpool", "year": 1887, "industry": "Coal Mining", "workers": 23564, "output": 225584, "wage": 105}, {"city": "London", "year": 1851, "industry": "Railways", "workers": 41744, "output": 291072, "wage": 28}, {"city": "Bristol", "year": 1875, "industry": "Shipbuilding", "workers": 31577, "output": 97426, "wage": 121}, {"city": "Leeds", "year": 1897, "industry": "Shipbuilding", "workers": 1005, "output": 129798, "wage": 98}, {"city": "Manchester", "year": 1838, "industry": "Shipbuilding", "workers": 31794, "output": 34607, "wage": 39}, {"city": "Manchester", "year": 1898, "industry": "Shipbuilding", "workers": 24806, "output": 174542, "wage": 43}, {"city": "Bristol", "year": 1891, "industry": "Textiles", "workers": 30474, "output": 74801, "wage": 60}, {"city": "Glasgow", "year": 1840, "industry": "Textiles", "workers": 24322, "output": 215691, "wage": 101}, {"city": "London", "year": 1875, "industry": "Railways", "workers": 45370, "output": 117945, "wage": 76}, {"city": "Bristol", "year": 1868, "industry": "Coal Mining", "workers": 39058, "output": 290177, "wage": 85}, {"city": "Leeds", "year": 1897, "industry": "Coal Mining", "workers": 3827, "output": 54024, "wage": 109}, {"city": "London", "year": 1864, "industry": "Railways", "workers": 18754, "output": 105563, "wage": 30}, {"city": "London", "year": 1896, "industry": "Coal Mining", "workers": 47561, "output": 238717, "wage": 54}, {"city": "Leeds", "year": 1859, "industry": "Railways", "workers": 28985, "output": 46539, "wage": 147}, {"city": "London", "year": 1853, "industry": "Coal Mining", "workers": 2703, "output": 245866, "wage": 73}, {"city": "Leeds", "year": 1889, "industry": "Steel", "workers": 23767, "output": 284232, "wage": 137}, {"city": "Manchester", "year": 1890, "industry": "Textiles", "workers": 5811, "output": 97987, "wage": 73}, {"city": "Manchester", "year": 1878, "industry": "Railways", "workers": 33506, "output": 223185, "wage": 139}, {"city": "London", "year": 1851, "industry": "Shipbuilding", "workers": 3434, "output": 155909, "wage": 61}, {"city": "Manchester", "year": 1886, "industry": "Coal Mining", "workers": 36512, "output": 121427, "wage": 57}, {"city": "Bristol", "year": 1870, "industry": "Railways", "workers": 32665, "output": 260785, "wage": 52}, {"city": "Liverpool", "year": 1872, "industry": "Steel", "workers": 35906, "output": 135687, "wage": 53}, {"city": "Glasgow", "year": 1849, "industry": "Steel", "workers": 43868, "output": 280878, "wage": 124}, {"city": "Leeds", "year": 1893, "industry": "Textiles", "workers": 26347, "output": 198742, "wage": 29}, {"city": "Manchester", "year": 1887, "industry": "Railways", "workers": 21167, "output": 186492, "wage": 107}, {"city": "Manchester", "year": 1869, "industry": "Railways", "workers": 24278, "output": 251142, "wage": 137}, {"city": "Glasgow", "year": 1842, "industry": "Coal Mining", "workers": 25420, "output": 12107, "wage": 64}, {"city": "Birmingham", "year": 1874, "industry": "Shipbuilding", "workers": 16722, "output": 296885, "wage": 127}, {"city": "Leeds", "year": 1854, "industry": "Steel", "workers": 16418, "output": 8032, "wage": 67}, {"city": "Manchester", "year": 1845, "industry": "Shipbuilding", "workers": 40668, "output": 161624, "wage": 105}, {"city": "London", "year": 1899, "industry": "Steel", "workers": 4847, "output": 212650, "wage": 136}, {"city": "Glasgow", "year": 1890, "industry": "Coal Mining", "workers": 39099, "output": 156098, "wage": 135}, {"city": "London", "year": 1856, "industry": "Textiles", "workers": 5956, "output": 55743, "wage": 134}, {"city": "London", "year": 1894, "industry": "Railways", "workers": 4054, "output": 187078, "wage": 147}, {"city": "Edinburgh", "year": 1898, "industry": "Steel", "workers": 19624, "output": 40619, "wage": 45}, {"city": "Manchester", "year": 1845, "industry": "Steel", "workers": 26539, "output": 52155, "wage": 137}, {"city": "Bristol", "year": 1850, "industry": "Railways", "workers": 42053, "output": 110792, "wage": 147}, {"city": "Glasgow", "year": 1890, "industry": "Textiles", "workers": 15866, "output": 133028, "wage": 69}, {"city": "Leeds", "year": 1845, "industry": "Steel", "workers": 15600, "output": 159157, "wage": 32}, {"city": "Birmingham", "year": 1871, "industry": "Shipbuilding", "workers": 16715, "output": 170486, "wage": 135}, {"city": "Leeds", "year": 1882, "industry": "Coal Mining", "workers": 22205, "output": 272044, "wage": 121}, {"city": "London", "year": 1842, "industry": "Textiles", "workers": 11093, "output": 73706, "wage": 84}, {"city": "London", "year": 1854, "industry": "Shipbuilding", "workers": 5091, "output": 21210, "wage": 110}, {"city": "Bristol", "year": 1900, "industry": "Steel", "workers": 41878, "output": 34612, "wage": 110}, {"city": "Glasgow", "year": 1855, "industry": "Textiles", "workers": 43015, "output": 26116, "wage": 123}, {"city": "Edinburgh", "year": 1838, "industry": "Railways", "workers": 42213, "output": 39174, "wage": 43}, {"city": "Liverpool", "year": 1843, "industry": "Textiles", "workers": 34828, "output": 204654, "wage": 113}, {"city": "Edinburgh", "year": 1863, "industry": "Steel", "workers": 20814, "output": 183991, "wage": 144}, {"city": "London", "year": 1893, "industry": "Coal Mining", "workers": 12228, "output": 24976, "wage": 133}, {"city": "Bristol", "year": 1848, "industry": "Shipbuilding", "workers": 13968, "output": 102982, "wage": 54}, {"city": "Glasgow", "year": 1895, "industry": "Railways", "workers": 17550, "output": 255147, "wage": 114}, {"city": "Bristol", "year": 1878, "industry": "Textiles", "workers": 44059, "output": 235308, "wage": 118}, {"city": "London", "year": 1897, "industry": "Coal Mining", "workers": 47562, "output": 164967, "wage": 37}, {"city": "Manchester", "year": 1849, "industry": "Coal Mining", "workers": 41847, "output": 199642, "wage": 138}, {"city": "Liverpool", "year": 1871, "industry": "Shipbuilding", "workers": 47500, "output": 171060, "wage": 130}, {"city": "Bristol", "year": 1845, "industry": "Textiles", "workers": 12614, "output": 8633, "wage": 5}, {"city": "London", "year": 1866, "industry": "Textiles", "workers": 39929, "output": 32478, "wage": 32}, {"city": "Birmingham", "year": 1898, "industry": "Shipbuilding", "workers": 43636, "output": 264259, "wage": 56}, {"city": "Leeds", "year": 1863, "industry": "Coal Mining", "workers": 12069, "output": 21795, "wage": 127}, {"city": "Bristol", "year": 1899, "industry": "Textiles", "workers": 397, "output": 256899, "wage": 115}, {"city": "Bristol", "year": 1856, "industry": "Railways", "workers": 4559, "output": 119389, "wage": 66}, {"city": "Glasgow", "year": 1844, "industry": "Steel", "workers": 45305, "output": 90604, "wage": 112}, {"city": "Leeds", "year": 1894, "industry": "Textiles", "workers": 26839, "output": 271285, "wage": 99}, {"city": "London", "year": 1897, "industry": "Railways", "workers": 47192, "output": 142978, "wage": 81}, {"city": "Glasgow", "year": 1854, "industry": "Coal Mining", "workers": 37460, "output": 42122, "wage": 43}, {"city": "Edinburgh", "year": 1852, "industry": "Shipbuilding", "workers": 44422, "output": 149255, "wage": 36}, {"city": "Leeds", "year": 1843, "industry": "Railways", "workers": 31552, "output": 81665, "wage": 42}, {"city": "Glasgow", "year": 1870, "industry": "Railways", "workers": 3664, "output": 128756, "wage": 44}, {"city": "Edinburgh", "year": 1871, "industry": "Textiles", "workers": 2152, "output": 37719, "wage": 113}, {"city": "Leeds", "year": 1877, "industry": "Shipbuilding", "workers": 4747, "output": 79434, "wage": 120}, {"city": "Leeds", "year": 1838, "industry": "Shipbuilding", "workers": 15576, "output": 182019, "wage": 118}, {"city": "Glasgow", "year": 1851, "industry": "Railways", "workers": 7954, "output": 257543, "wage": 133}, {"city": "Manchester", "year": 1861, "industry": "Railways", "workers": 41450, "output": 75360, "wage": 133}, {"city": "Bristol", "year": 1872, "industry": "Coal Mining", "workers": 37189, "output": 103986, "wage": 106}, {"city": "London", "year": 1842, "industry": "Textiles", "workers": 28549, "output": 126630, "wage": 112}, {"city": "London", "year": 1864, "industry": "Shipbuilding", "workers": 12208, "output": 91558, "wage": 31}, {"city": "Bristol", "year": 1900, "industry": "Steel", "workers": 9139, "output": 280780, "wage": 110}, {"city": "Manchester", "year": 1866, "industry": "Railways", "workers": 17712, "output": 4884, "wage": 52}, {"city": "Glasgow", "year": 1882, "industry": "Steel", "workers": 36455, "output": 276998, "wage": 57}, {"city": "Glasgow", "year": 1837, "industry": "Railways", "workers": 5370, "output": 160204, "wage": 41}, {"city": "London", "year": 1844, "industry": "Shipbuilding", "workers": 28342, "output": 290750, "wage": 62}, {"city": "Liverpool", "year": 1895, "industry": "Textiles", "workers": 40151, "output": 91895, "wage": 104}, {"city": "Manchester", "year": 1884, "industry": "Steel", "workers": 6629, "output": 16851, "wage": 60}, {"city": "Manchester", "year": 1839, "industry": "Coal Mining", "workers": 15256, "output": 184196, "wage": 62}, {"city": "Glasgow", "year": 1879, "industry": "Shipbuilding", "workers": 13963, "output": 81287, "wage": 115}, {"city": "Leeds", "year": 1857, "industry": "Steel", "workers": 37387, "output": 274393, "wage": 131}, {"city": "Liverpool", "year": 1867, "industry": "Railways", "workers": 14120, "output": 291349, "wage": 104}, {"city": "Leeds", "year": 1840, "industry": "Textiles", "workers": 27735, "output": 154078, "wage": 59}, {"city": "Birmingham", "year": 1875, "industry": "Railways", "workers": 23918, "output": 181525, "wage": 89}, {"city": "London", "year": 1852, "industry": "Textiles", "workers": 12056, "output": 150414, "wage": 89}, {"city": "London", "year": 1856, "industry": "Railways", "workers": 29001, "output": 293899, "wage": 120}, {"city": "Leeds", "year": 1850, "industry": "Steel", "workers": 2731, "output": 171699, "wage": 124}, {"city": "Leeds", "year": 1870, "industry": "Coal Mining", "workers": 49200, "output": 158598, "wage": 19}, {"city": "Birmingham", "year": 1877, "industry": "Railways", "workers": 25065, "output": 246819, "wage": 74}, {"city": "Glasgow", "year": 1865, "industry": "Steel", "workers": 32127, "output": 113331, "wage": 29}, {"city": "Edinburgh", "year": 1898, "industry": "Steel", "workers": 15780, "output": 150900, "wage": 19}, {"city": "Manchester", "year": 1859, "industry": "Railways", "workers": 18642, "output": 226247, "wage": 20}, {"city": "Manchester", "year": 1841, "industry": "Coal Mining", "workers": 28230, "output": 205071, "wage": 110}, {"city": "Glasgow", "year": 1859, "industry": "Textiles", "workers": 47022, "output": 264361, "wage": 70}, {"city": "Edinburgh", "year": 1838, "industry": "Steel", "workers": 14670, "output": 221542, "wage": 36}, {"city": "Liverpool", "year": 1885, "industry": "Steel", "workers": 43683, "output": 221175, "wage": 133}, {"city": "Edinburgh", "year": 1883, "industry": "Steel", "workers": 44024, "output": 195074, "wage": 49}, {"city": "Bristol", "year": 1871, "industry": "Steel", "workers": 6949, "output": 23261, "wage": 72}, {"city": "Liverpool", "year": 1838, "industry": "Railways", "workers": 17010, "output": 201061, "wage": 70}, {"city": "Manchester", "year": 1855, "industry": "Textiles", "workers": 14978, "output": 112843, "wage": 109}, {"city": "Bristol", "year": 1871, "industry": "Railways", "workers": 40711, "output": 226841, "wage": 45}, {"city": "London", "year": 1884, "industry": "Coal Mining", "workers": 27003, "output": 273256, "wage": 128}, {"city": "Glasgow", "year": 1890, "industry": "Textiles", "workers": 26790, "output": 93774, "wage": 29}, {"city": "Leeds", "year": 1874, "industry": "Shipbuilding", "workers": 32413, "output": 151831, "wage": 100}, {"city": "Bristol", "year": 1855, "industry": "Coal Mining", "workers": 19123, "output": 182085, "wage": 32}, {"city": "Liverpool", "year": 1871, "industry": "Railways", "workers": 26803, "output": 104538, "wage": 43}, {"city": "Glasgow", "year": 1890, "industry": "Steel", "workers": 13209, "output": 57673, "wage": 54}, {"city": "Manchester", "year": 1888, "industry": "Railways", "workers": 6598, "output": 196471, "wage": 145}, {"city": "Manchester", "year": 1874, "industry": "Railways", "workers": 6075, "output": 77525, "wage": 90}, {"city": "Liverpool", "year": 1842, "industry": "Railways", "workers": 28342, "output": 150723, "wage": 62}, {"city": "Leeds", "year": 1886, "industry": "Coal Mining", "workers": 35423, "output": 261201, "wage": 80}, {"city": "Birmingham", "year": 1842, "industry": "Shipbuilding", "workers": 24937, "output": 223400, "wage": 8}, {"city": "Liverpool", "year": 1841, "industry": "Steel", "workers": 14985, "output": 69737, "wage": 135}, {"city": "Bristol", "year": 1885, "industry": "Steel", "workers": 20593, "output": 263359, "wage": 96}, {"city": "Manchester", "year": 1880, "industry": "Railways", "workers": 4770, "output": 182474, "wage": 92}, {"city": "Leeds", "year": 1838, "industry": "Railways", "workers": 20858, "output": 137753, "wage": 71}, {"city": "London", "year": 1847, "industry": "Railways", "workers": 33705, "output": 242741, "wage": 70}, {"city": "Edinburgh", "year": 1856, "industry": "Railways", "workers": 35778, "output": 270258, "wage": 113}, {"city": "Birmingham", "year": 1845, "industry": "Coal Mining", "workers": 39252, "output": 72141, "wage": 30}, {"city": "Manchester", "year": 1863, "industry": "Coal Mining", "workers": 21343, "output": 288684, "wage": 102}, {"city": "London", "year": 1886, "industry": "Textiles", "workers": 16597, "output": 174389, "wage": 60}, {"city": "Birmingham", "year": 1880, "industry": "Textiles", "workers": 25836, "output": 95540, "wage": 67}, {"city": "Leeds", "year": 1871, "industry": "Coal Mining", "workers": 45806, "output": 14612, "wage": 31}, {"city": "London", "year": 1840, "industry": "Railways", "workers": 232, "output": 78591, "wage": 132}, {"city": "Leeds", "year": 1847, "industry": "Steel", "workers": 26185, "output": 192166, "wage": 86}, {"city": "Glasgow", "year": 1892, "industry": "Coal Mining", "workers": 37815, "output": 77256, "wage": 129}, {"city": "Manchester", "year": 1839, "industry": "Coal Mining", "workers": 32661, "output": 250643, "wage": 18}, {"city": "Bristol", "year": 1855, "industry": "Textiles", "workers": 4778, "output": 247007, "wage": 58}, {"city": "London", "year": 1868, "industry": "Shipbuilding", "workers": 17406, "output": 242345, "wage": 138}, {"city": "Glasgow", "year": 1872, "industry": "Steel", "workers": 14934, "output": 32319, "wage": 96}, {"city": "Manchester", "year": 1865, "industry": "Steel", "workers": 140, "output": 273223, "wage": 99}, {"city": "Bristol", "year": 1885, "industry": "Shipbuilding", "workers": 26133, "output": 66292, "wage": 94}, {"city": "Bristol", "year": 1882, "industry": "Textiles", "workers": 36105, "output": 14108, "wage": 104}, {"city": "London", "year": 1875, "industry": "Steel", "workers": 17711, "output": 33988, "wage": 117}, {"city": "London", "year": 1842, "industry": "Textiles", "workers": 1908, "output": 240699, "wage": 116}, {"city": "Birmingham", "year": 1842, "industry": "Textiles", "workers": 44796, "output": 71582, "wage": 52}, {"city": "Edinburgh", "year": 1896, "industry": "Railways", "workers": 47030, "output": 142863, "wage": 6}, {"city": "Glasgow", "year": 1867, "industry": "Shipbuilding", "workers": 16559, "output": 124385, "wage": 133}, {"city": "Bristol", "year": 1886, "industry": "Shipbuilding", "workers": 24085, "output": 107964, "wage": 13}, {"city": "Birmingham", "year": 1875, "industry": "Railways", "workers": 47445, "output": 134730, "wage": 48}, {"city": "Liverpool", "year": 1882, "industry": "Textiles", "workers": 33381, "output": 76237, "wage": 37}, {"city": "Leeds", "year": 1868, "industry": "Textiles", "workers": 24900, "output": 15084, "wage": 117}, {"city": "Liverpool", "year": 1845, "industry": "Steel", "workers": 28492, "output": 164079, "wage": 124}, {"city": "Manchester", "year": 1885, "industry": "Shipbuilding", "workers": 6449, "output": 144822, "wage": 133}, {"city": "London", "year": 1843, "industry": "Steel", "workers": 23148, "output": 48817, "wage": 64}, {"city": "Birmingham", "year": 1851, "industry": "Steel", "workers": 15900, "output": 288362, "wage": 47}, {"city": "London", "year": 1839, "industry": "Shipbuilding", "workers": 2899, "output": 52022, "wage": 5}, {"city": "Leeds", "year": 1858, "industry": "Steel", "workers": 35033, "output": 176207, "wage": 51}, {"city": "Glasgow", "year": 1838, "industry": "Shipbuilding", "workers": 19333, "output": 195376, "wage": 37}, {"city": "Edinburgh", "year": 1856, "industry": "Textiles", "workers": 5686, "output": 194483, "wage": 111}, {"city": "Glasgow", "year": 1863, "industry": "Textiles", "workers": 31680, "output": 33758, "wage": 129}, {"city": "Bristol", "year": 1860, "industry": "Coal Mining", "workers": 25853, "output": 201465, "wage": 106}, {"city": "London", "year": 1882, "industry": "Steel", "workers": 3127, "output": 34829, "wage": 25}, {"city": "Leeds", "year": 1892, "industry": "Steel", "workers": 49144, "output": 155256, "wage": 141}, {"city": "Manchester", "year": 1844, "industry": "Shipbuilding", "workers": 30848, "output": 92329, "wage": 147}, {"city": "Birmingham", "year": 1862, "industry": "Steel", "workers": 25212, "output": 134208, "wage": 85}, {"city": "Liverpool", "year": 1862, "industry": "Coal Mining", "workers": 31939, "output": 106628, "wage": 20}, {"city": "Bristol", "year": 1845, "industry": "Railways", "workers": 24735, "output": 216210, "wage": 144}, {"city": "Leeds", "year": 1894, "industry": "Railways", "workers": 3337, "output": 130174, "wage": 144}, {"city": "Edinburgh", "year": 1849, "industry": "Textiles", "workers": 2292, "output": 156912, "wage": 72}, {"city": "London", "year": 1862, "industry": "Coal Mining", "workers": 4872, "output": 129895, "wage": 103}, {"city": "Glasgow", "year": 1868, "industry": "Textiles", "workers": 31598, "output": 269618, "wage": 61}, {"city": "Leeds", "year": 1843, "industry": "Shipbuilding", "workers": 31940, "output": 251504, "wage": 123}, {"city": "Edinburgh", "year": 1889, "industry": "Railways", "workers": 20738, "output": 119429, "wage": 81}, {"city": "Edinburgh", "year": 1871, "industry": "Shipbuilding", "workers": 17506, "output": 88817, "wage": 89}, {"city": "Edinburgh", "year": 1876, "industry": "Coal Mining", "workers": 2420, "output": 285408, "wage": 50}, {"city": "Leeds", "year": 1848, "industry": "Textiles", "workers": 25466, "output": 98691, "wage": 148}, {"city": "Glasgow", "year": 1864, "industry": "Textiles", "workers": 24839, "output": 78016, "wage": 22}, {"city": "Edinburgh", "year": 1881, "industry": "Steel", "workers": 14997, "output": 144782, "wage": 63}, {"city": "Birmingham", "year": 1885, "industry": "Coal Mining", "workers": 7101, "output": 59494, "wage": 28}, {"city": "Bristol", "year": 1892, "industry": "Coal Mining", "workers": 43867, "output": 204094, "wage": 82}, {"city": "Edinburgh", "year": 1888, "industry": "Textiles", "workers": 13953, "output": 167485, "wage": 104}, {"city": "Leeds", "year": 1862, "industry": "Shipbuilding", "workers": 19685, "output": 271307, "wage": 38}, {"city": "Edinburgh", "year": 1872, "industry": "Steel", "workers": 14278, "output": 136028, "wage": 62}, {"city": "Bristol", "year": 1884, "industry": "Textiles", "workers": 30743, "output": 284626, "wage": 78}, {"city": "Leeds", "year": 1887, "industry": "Railways", "workers": 24971, "output": 97036, "wage": 38}, {"city": "Birmingham", "year": 1862, "industry": "Steel", "workers": 10105, "output": 50256, "wage": 37}, {"city": "Manchester", "year": 1884, "industry": "Steel", "workers": 25354, "output": 249761, "wage": 20}, {"city": "Liverpool", "year": 1879, "industry": "Textiles", "workers": 41309, "output": 169658, "wage": 8}, {"city": "Bristol", "year": 1892, "industry": "Railways", "workers": 42561, "output": 149803, "wage": 32}, {"city": "Leeds", "year": 1890, "industry": "Steel", "workers": 5501, "output": 24394, "wage": 115}, {"city": "Liverpool", "year": 1896, "industry": "Shipbuilding", "workers": 48713, "output": 255775, "wage": 54}, {"city": "Edinburgh", "year": 1877, "industry": "Textiles", "workers": 10379, "output": 119560, "wage": 52}, {"city": "Leeds", "year": 1886, "industry": "Shipbuilding", "workers": 38034, "output": 252826, "wage": 126}, {"city": "Edinburgh", "year": 1850, "industry": "Shipbuilding", "workers": 17319, "output": 32443, "wage": 7}, {"city": "Liverpool", "year": 1863, "industry": "Textiles", "workers": 23561, "output": 52708, "wage": 16}, {"city": "Bristol", "year": 1865, "industry": "Shipbuilding", "workers": 43289, "output": 143995, "wage": 119}, {"city": "London", "year": 1839, "industry": "Coal Mining", "workers": 9760, "output": 264999, "wage": 17}, {"city": "London", "year": 1841, "industry": "Railways", "workers": 33988, "output": 284374, "wage": 112}, {"city": "Edinburgh", "year": 1849, "industry": "Railways", "workers": 15903, "output": 130042, "wage": 69}, {"city": "Liverpool", "year": 1853, "industry": "Shipbuilding", "workers": 32213, "output": 89026, "wage": 16}, {"city": "Leeds", "year": 1881, "industry": "Railways", "workers": 979, "output": 79375, "wage": 20}, {"city": "London", "year": 1852, "industry": "Steel", "workers": 39267, "output": 285919, "wage": 87}, {"city": "London", "year": 1870, "industry": "Steel", "workers": 2910, "output": 91301, "wage": 66}, {"city": "Liverpool", "year": 1872, "industry": "Railways", "workers": 44285, "output": 288895, "wage": 61}, {"city": "London", "year": 1900, "industry": "Coal Mining", "workers": 32239, "output": 230411, "wage": 117}, {"city": "Glasgow", "year": 1851, "industry": "Coal Mining", "workers": 43613, "output": 147608, "wage": 113}, {"city": "Bristol", "year": 1855, "industry": "Textiles", "workers": 10176, "output": 225462, "wage": 36}, {"city": "Liverpool", "year": 1858, "industry": "Textiles", "workers": 5045, "output": 249516, "wage": 69}, {"city": "Birmingham", "year": 1870, "industry": "Steel", "workers": 5107, "output": 117348, "wage": 40}, {"city": "Edinburgh", "year": 1865, "industry": "Railways", "workers": 43322, "output": 101942, "wage": 86}, {"city": "Liverpool", "year": 1846, "industry": "Shipbuilding", "workers": 21377, "output": 72984, "wage": 40}, {"city": "Leeds", "year": 1854, "industry": "Textiles", "workers": 48255, "output": 255841, "wage": 51}, {"city": "Bristol", "year": 1845, "industry": "Railways", "workers": 40552, "output": 89491, "wage": 95}, {"city": "Manchester", "year": 1883, "industry": "Coal Mining", "workers": 3117, "output": 174968, "wage": 108}, {"city": "Glasgow", "year": 1857, "industry": "Railways", "workers": 16372, "output": 257650, "wage": 95}, {"city": "Liverpool", "year": 1862, "industry": "Coal Mining", "workers": 3174, "output": 71368, "wage": 81}, {"city": "Bristol", "year": 1876, "industry": "Textiles", "workers": 16378, "output": 57347, "wage": 88}, {"city": "Birmingham", "year": 1860, "industry": "Steel", "workers": 40623, "output": 169707, "wage": 75}, {"city": "Glasgow", "year": 1842, "industry": "Coal Mining", "workers": 19226, "output": 6950, "wage": 95}, {"city": "Manchester", "year": 1895, "industry": "Railways", "workers": 27909, "output": 86364, "wage": 59}, {"city": "London", "year": 1893, "industry": "Textiles", "workers": 16830, "output": 254296, "wage": 72}, {"city": "Bristol", "year": 1843, "industry": "Shipbuilding", "workers": 6596, "output": 167852, "wage": 135}, {"city": "Manchester", "year": 1870, "industry": "Textiles", "workers": 45360, "output": 277486, "wage": 46}, {"city": "Manchester", "year": 1879, "industry": "Textiles", "workers": 20365, "output": 278501, "wage": 73}, {"city": "Glasgow", "year": 1871, "industry": "Steel", "workers": 40461, "output": 145327, "wage": 79}, {"city": "Leeds", "year": 1897, "industry": "Steel", "workers": 7239, "output": 136868, "wage": 120}, {"city": "London", "year": 1886, "industry": "Coal Mining", "workers": 32962, "output": 223807, "wage": 104}, {"city": "Manchester", "year": 1875, "industry": "Coal Mining", "workers": 17654, "output": 122803, "wage": 36}, {"city": "London", "year": 1865, "industry": "Coal Mining", "workers": 27537, "output": 299634, "wage": 43}, {"city": "Manchester", "year": 1847, "industry": "Shipbuilding", "workers": 9951, "output": 81996, "wage": 24}, {"city": "London", "year": 1878, "industry": "Steel", "workers": 25877, "output": 159853, "wage": 149}, {"city": "Liverpool", "year": 1882, "industry": "Railways", "workers": 17345, "output": 59662, "wage": 88}, {"city": "Birmingham", "year": 1873, "industry": "Steel", "workers": 47683, "output": 116355, "wage": 104}, {"city": "Birmingham", "year": 1865, "industry": "Railways", "workers": 32926, "output": 115812, "wage": 20}, {"city": "Manchester", "year": 1843, "industry": "Shipbuilding", "workers": 34643, "output": 37894, "wage": 69}, {"city": "Birmingham", "year": 1888, "industry": "Shipbuilding", "workers": 5575, "output": 108436, "wage": 75}, {"city": "Leeds", "year": 1850, "industry": "Railways", "workers": 47178, "output": 136443, "wage": 19}, {"city": "Birmingham", "year": 1851, "industry": "Railways", "workers": 20864, "output": 288811, "wage": 23}, {"city": "Manchester", "year": 1842, "industry": "Coal Mining", "workers": 37142, "output": 221730, "wage": 57}, {"city": "London", "year": 1885, "industry": "Shipbuilding", "workers": 43727, "output": 70178, "wage": 30}, {"city": "Edinburgh", "year": 1855, "industry": "Steel", "workers": 43985, "output": 129161, "wage": 96}, {"city": "Liverpool", "year": 1871, "industry": "Railways", "workers": 39455, "output": 39168, "wage": 113}, {"city": "Birmingham", "year": 1881, "industry": "Coal Mining", "workers": 34460, "output": 188882, "wage": 63}, {"city": "Manchester", "year": 1895, "industry": "Coal Mining", "workers": 16919, "output": 206257, "wage": 43}, {"city": "London", "year": 1863, "industry": "Shipbuilding", "workers": 31668, "output": 111704, "wage": 128}, {"city": "Leeds", "year": 1886, "industry": "Coal Mining", "workers": 12134, "output": 148874, "wage": 46}, {"city": "Leeds", "year": 1840, "industry": "Coal Mining", "workers": 23887, "output": 36202, "wage": 80}, {"city": "Glasgow", "year": 1870, "industry": "Textiles", "workers": 13137, "output": 189740, "wage": 90}, {"city": "Manchester", "year": 1867, "industry": "Railways", "workers": 2165, "output": 222218, "wage": 134}, {"city": "Leeds", "year": 1870, "industry": "Textiles", "workers": 10920, "output": 265695, "wage": 142}, {"city": "Edinburgh", "year": 1863, "industry": "Steel", "workers": 22206, "output": 259208, "wage": 91}, {"city": "Bristol", "year": 1887, "industry": "Textiles", "workers": 18709, "output": 284545, "wage": 145}, {"city": "Birmingham", "year": 1875, "industry": "Steel", "workers": 45766, "output": 236319, "wage": 74}, {"city": "Glasgow", "year": 1895, "industry": "Steel", "workers": 37288, "output": 72160, "wage": 61}, {"city": "Edinburgh", "year": 1878, "industry": "Shipbuilding", "workers": 37726, "output": 113392, "wage": 97}, {"city": "Leeds", "year": 1850, "industry": "Textiles", "workers": 46778, "output": 170675, "wage": 34}, {"city": "London", "year": 1898, "industry": "Shipbuilding", "workers": 16644, "output": 186453, "wage": 135}, {"city": "Liverpool", "year": 1860, "industry": "Coal Mining", "workers": 44220, "output": 139517, "wage": 130}, {"city": "Birmingham", "year": 1846, "industry": "Shipbuilding", "workers": 41091, "output": 215921, "wage": 35}, {"city": "London", "year": 1872, "industry": "Textiles", "workers": 3027, "output": 33301, "wage": 39}, {"city": "Manchester", "year": 1897, "industry": "Shipbuilding", "workers": 3867, "output": 154712, "wage": 63}, {"city": "Leeds", "year": 1882, "industry": "Railways", "workers": 27018, "output": 262852, "wage": 81}, {"city": "Manchester", "year": 1882, "industry": "Railways", "workers": 35947, "output": 121181, "wage": 90}, {"city": "Bristol", "year": 1854, "industry": "Railways", "workers": 8808, "output": 29637, "wage": 85}, {"city": "Liverpool", "year": 1847, "industry": "Coal Mining", "workers": 33023, "output": 88624, "wage": 92}, {"city": "Liverpool", "year": 1862, "industry": "Textiles", "workers": 34868, "output": 147355, "wage": 85}, {"city": "Birmingham", "year": 1885, "industry": "Textiles", "workers": 4237, "output": 211849, "wage": 90}, {"city": "London", "year": 1843, "industry": "Railways", "workers": 43846, "output": 291638, "wage": 94}, {"city": "Bristol", "year": 1894, "industry": "Railways", "workers": 3314, "output": 90363, "wage": 24}, {"city": "London", "year": 1894, "industry": "Shipbuilding", "workers": 48730, "output": 69368, "wage": 149}, {"city": "Glasgow", "year": 1883, "industry": "Coal Mining", "workers": 23322, "output": 169317, "wage": 113}, {"city": "Leeds", "year": 1837, "industry": "Coal Mining", "workers": 19740, "output": 169815, "wage": 70}, {"city": "Liverpool", "year": 1880, "industry": "Shipbuilding", "workers": 33191, "output": 211727, "wage": 95}, {"city": "Glasgow", "year": 1884, "industry": "Railways", "workers": 20041, "output": 261500, "wage": 18}, {"city": "Edinburgh", "year": 1870, "industry": "Textiles", "workers": 38019, "output": 276059, "wage": 35}, {"city": "Bristol", "year": 1861, "industry": "Shipbuilding", "workers": 37652, "output": 194769, "wage": 49}, {"city": "Glasgow", "year": 1874, "industry": "Coal Mining", "workers": 44460, "output": 200781, "wage": 36}, {"city": "Liverpool", "year": 1868, "industry": "Railways", "workers": 42460, "output": 85974, "wage": 6}, {"city": "Bristol", "year": 1884, "industry": "Steel", "workers": 18637, "output": 277991, "wage": 148}, {"city": "Liverpool", "year": 1877, "industry": "Shipbuilding", "workers": 18136, "output": 249744, "wage": 131}, {"city": "Bristol", "year": 1874, "industry": "Railways", "workers": 27561, "output": 144702, "wage": 71}, {"city": "Bristol", "year": 1885, "industry": "Textiles", "workers": 36411, "output": 160692, "wage": 5}, {"city": "Bristol", "year": 1840, "industry": "Steel", "workers": 11116, "output": 161470, "wage": 5}, {"city": "Leeds", "year": 1885, "industry": "Steel", "workers": 44847, "output": 265331, "wage": 15}, {"city": "Glasgow", "year": 1876, "industry": "Textiles", "workers": 26148, "output": 215806, "wage": 21}, {"city": "Bristol", "year": 1841, "industry": "Textiles", "workers": 26964, "output": 68986, "wage": 16}, {"city": "Leeds", "year": 1876, "industry": "Textiles", "workers": 11052, "output": 181680, "wage": 27}, {"city": "Glasgow", "year": 1843, "industry": "Shipbuilding", "workers": 46185, "output": 91641, "wage": 68}, {"city": "Manchester", "year": 1887, "industry": "Shipbuilding", "workers": 21463, "output": 90345, "wage": 74}, {"city": "Liverpool", "year": 1873, "industry": "Railways", "workers": 25313, "output": 288533, "wage": 72}, {"city": "Edinburgh", "year": 1884, "industry": "Steel", "workers": 31499, "output": 86620, "wage": 115}, {"city": "Bristol", "year": 1862, "industry": "Steel", "workers": 46791, "output": 297095, "wage": 24}, {"city": "Bristol", "year": 1848, "industry": "Steel", "workers": 42975, "output": 103707, "wage": 75}, {"city": "Manchester", "year": 1844, "industry": "Coal Mining", "workers": 18513, "output": 178778, "wage": 56}, {"city": "Bristol", "year": 1866, "industry": "Coal Mining", "workers": 48701, "output": 222647, "wage": 60}, {"city": "Leeds", "year": 1892, "industry": "Textiles", "workers": 48831, "output": 194261, "wage": 149}, {"city": "Manchester", "year": 1883, "industry": "Steel", "workers": 49894, "output": 262735, "wage": 113}, {"city": "Leeds", "year": 1850, "industry": "Railways", "workers": 9793, "output": 204992, "wage": 15}, {"city": "Edinburgh", "year": 1840, "industry": "Railways", "workers": 23622, "output": 156131, "wage": 119}, {"city": "Edinburgh", "year": 1876, "industry": "Railways", "workers": 44987, "output": 35745, "wage": 111}, {"city": "Manchester", "year": 1856, "industry": "Coal Mining", "workers": 28570, "output": 105438, "wage": 31}, {"city": "Bristol", "year": 1854, "industry": "Coal Mining", "workers": 40130, "output": 189150, "wage": 60}, {"city": "Bristol", "year": 1877, "industry": "Shipbuilding", "workers": 9816, "output": 95211, "wage": 105}, {"city": "Bristol", "year": 1846, "industry": "Steel", "workers": 30682, "output": 137623, "wage": 129}, {"city": "Bristol", "year": 1845, "industry": "Steel", "workers": 96, "output": 176001, "wage": 117}, {"city": "Bristol", "year": 1853, "industry": "Steel", "workers": 16517, "output": 238491, "wage": 133}, {"city": "Leeds", "year": 1849, "industry": "Shipbuilding", "workers": 14762, "output": 3032, "wage": 8}, {"city": "Manchester", "year": 1861, "industry": "Railways", "workers": 34754, "output": 138261, "wage": 103}, {"city": "Manchester", "year": 1846, "industry": "Railways", "workers": 1143, "output": 183041, "wage": 33}, {"city": "Edinburgh", "year": 1877, "industry": "Shipbuilding", "workers": 8004, "output": 65940, "wage": 143}, {"city": "London", "year": 1842, "industry": "Shipbuilding", "workers": 25740, "output": 172589, "wage": 86}, {"city": "Birmingham", "year": 1898, "industry": "Steel", "workers": 14617, "output": 190786, "wage": 77}, {"city": "Birmingham", "year": 1894, "industry": "Shipbuilding", "workers": 44690, "output": 149212, "wage": 96}, {"city": "Glasgow", "year": 1900, "industry": "Steel", "workers": 15965, "output": 15452, "wage": 83}, {"city": "Glasgow", "year": 1888, "industry": "Textiles", "workers": 12317, "output": 106944, "wage": 87}, {"city": "Bristol", "year": 1873, "industry": "Steel", "workers": 28378, "output": 291394, "wage": 39}, {"city": "Liverpool", "year": 1883, "industry": "Textiles", "workers": 33387, "output": 99955, "wage": 124}, {"city": "Leeds", "year": 1861, "industry": "Coal Mining", "workers": 3708, "output": 129110, "wage": 116}, {"city": "Edinburgh", "year": 1892, "industry": "Coal Mining", "workers": 36728, "output": 61450, "wage": 97}, {"city": "Bristol", "year": 1856, "industry": "Steel", "workers": 31435, "output": 95952, "wage": 69}, {"city": "Leeds", "year": 1900, "industry": "Coal Mining", "workers": 34477, "output": 231091, "wage": 50}, {"city": "Manchester", "year": 1856, "industry": "Steel", "workers": 31867, "output": 100798, "wage": 41}, {"city": "Leeds", "year": 1892, "industry": "Shipbuilding", "workers": 10094, "output": 3150, "wage": 6}, {"city": "London", "year": 1894, "industry": "Shipbuilding", "workers": 19606, "output": 187205, "wage": 45}, {"city": "Leeds", "year": 1844, "industry": "Coal Mining", "workers": 13433, "output": 59723, "wage": 113}, {"city": "Liverpool", "year": 1872, "industry": "Coal Mining", "workers": 16069, "output": 194340, "wage": 100}, {"city": "Glasgow", "year": 1876, "industry": "Steel", "workers": 38711, "output": 111150, "wage": 112}, {"city": "Leeds", "year": 1840, "industry": "Textiles", "workers": 37666, "output": 209303, "wage": 118}, {"city": "Liverpool", "year": 1853, "industry": "Textiles", "workers": 39301, "output": 110971, "wage": 101}, {"city": "Manchester", "year": 1874, "industry": "Railways", "workers": 26841, "output": 296142, "wage": 113}, {"city": "Leeds", "year": 1847, "industry": "Coal Mining", "workers": 17964, "output": 192478, "wage": 71}, {"city": "Edinburgh", "year": 1853, "industry": "Coal Mining", "workers": 32711, "output": 167396, "wage": 23}, {"city": "Birmingham", "year": 1863, "industry": "Steel", "workers": 27434, "output": 276972, "wage": 9}, {"city": "Bristol", "year": 1875, "industry": "Coal Mining", "workers": 5656, "output": 257674, "wage": 24}, {"city": "Leeds", "year": 1848, "industry": "Steel", "workers": 9598, "output": 145732, "wage": 142}, {"city": "London", "year": 1855, "industry": "Coal Mining", "workers": 14627, "output": 256193, "wage": 98}, {"city": "Manchester", "year": 1872, "industry": "Steel", "workers": 28813, "output": 297073, "wage": 69}, {"city": "London", "year": 1861, "industry": "Textiles", "workers": 28259, "output": 3387, "wage": 43}, {"city": "Edinburgh", "year": 1886, "industry": "Shipbuilding", "workers": 831, "output": 285929, "wage": 27}, {"city": "Edinburgh", "year": 1887, "industry": "Shipbuilding", "workers": 6014, "output": 271498, "wage": 32}, {"city": "Liverpool", "year": 1857, "industry": "Coal Mining", "workers": 42350, "output": 122454, "wage": 94}, {"city": "Manchester", "year": 1852, "industry": "Textiles", "workers": 17659, "output": 116385, "wage": 123}, {"city": "Bristol", "year": 1846, "industry": "Shipbuilding", "workers": 7309, "output": 262559, "wage": 123}, {"city": "Liverpool", "year": 1843, "industry": "Shipbuilding", "workers": 42010, "output": 131192, "wage": 112}, {"city": "Liverpool", "year": 1839, "industry": "Steel", "workers": 39385, "output": 182407, "wage": 73}, {"city": "Leeds", "year": 1860, "industry": "Shipbuilding", "workers": 5996, "output": 236871, "wage": 141}, {"city": "London", "year": 1898, "industry": "Coal Mining", "workers": 29665, "output": 215584, "wage": 65}, {"city": "Glasgow", "year": 1888, "industry": "Textiles", "workers": 4137, "output": 11615, "wage": 148}, {"city": "Leeds", "year": 1844, "industry": "Steel", "workers": 30942, "output": 123259, "wage": 24}, {"city": "Manchester", "year": 1840, "industry": "Railways", "workers": 45741, "output": 239769, "wage": 149}, {"city": "Manchester", "year": 1888, "industry": "Coal Mining", "workers": 37953, "output": 151876, "wage": 97}, {"city": "Edinburgh", "year": 1856, "industry": "Steel", "workers": 41097, "output": 11802, "wage": 15}, {"city": "Birmingham", "year": 1882, "industry": "Steel", "workers": 18321, "output": 208420, "wage": 118}, {"city": "Leeds", "year": 1876, "industry": "Railways", "workers": 18948, "output": 261336, "wage": 120}, {"city": "Manchester", "year": 1851, "industry": "Textiles", "workers": 33384, "output": 123037, "wage": 48}, {"city": "Liverpool", "year": 1842, "industry": "Railways", "workers": 8482, "output": 121911, "wage": 139}, {"city": "Leeds", "year": 1856, "industry": "Railways", "workers": 36657, "output": 121907, "wage": 111}, {"city": "Leeds", "year": 1883, "industry": "Coal Mining", "workers": 43061, "output": 230709, "wage": 11}, {"city": "Manchester", "year": 1892, "industry": "Coal Mining", "workers": 12186, "output": 68894, "wage": 46}, {"city": "Birmingham", "year": 1877, "industry": "Shipbuilding", "workers": 42627, "output": 203197, "wage": 118}, {"city": "London", "year": 1839, "industry": "Steel", "workers": 28477, "output": 251116, "wage": 32}, {"city": "Glasgow", "year": 1886, "industry": "Coal Mining", "workers": 3480, "output": 217830, "wage": 104}, {"city": "Edinburgh", "year": 1879, "industry": "Steel", "workers": 32305, "output": 32918, "wage": 19}, {"city": "Bristol", "year": 1879, "industry": "Railways", "workers": 35182, "output": 78650, "wage": 119}, {"city": "Edinburgh", "year": 1850, "industry": "Coal Mining", "workers": 10578, "output": 42810, "wage": 149}, {"city": "Glasgow", "year": 1861, "industry": "Coal Mining", "workers": 2483, "output": 29951, "wage": 65}, {"city": "Bristol", "year": 1869, "industry": "Railways", "workers": 32605, "output": 129579, "wage": 19}, {"city": "Bristol", "year": 1875, "industry": "Steel", "workers": 15216, "output": 51637, "wage": 58}, {"city": "Manchester", "year": 1842, "industry": "Steel", "workers": 20778, "output": 270921, "wage": 85}, {"city": "Leeds", "year": 1880, "industry": "Textiles", "workers": 14692, "output": 160106, "wage": 59}, {"city": "London", "year": 1892, "industry": "Textiles", "workers": 25044, "output": 2699, "wage": 99}, {"city": "Manchester", "year": 1864, "industry": "Textiles", "workers": 24661, "output": 22169, "wage": 47}, {"city": "Edinburgh", "year": 1879, "industry": "Steel", "workers": 2893, "output": 294615, "wage": 147}, {"city": "London", "year": 1837, "industry": "Railways", "workers": 9486, "output": 226035, "wage": 119}, {"city": "Manchester", "year": 1854, "industry": "Shipbuilding", "workers": 18576, "output": 41652, "wage": 12}, {"city": "Edinburgh", "year": 1895, "industry": "Shipbuilding", "workers": 22203, "output": 167140, "wage": 55}, {"city": "Bristol", "year": 1877, "industry": "Shipbuilding", "workers": 33725, "output": 180612, "wage": 14}, {"city": "Bristol", "year": 1875, "industry": "Coal Mining", "workers": 17419, "output": 203503, "wage": 6}, {"city": "Manchester", "year": 1852, "industry": "Shipbuilding", "workers": 16521, "output": 128572, "wage": 138}, {"city": "Glasgow", "year": 1863, "industry": "Shipbuilding", "workers": 18342, "output": 170879, "wage": 115}, {"city": "Bristol", "year": 1851, "industry": "Railways", "workers": 15757, "output": 266775, "wage": 49}, {"city": "Glasgow", "year": 1861, "industry": "Textiles", "workers": 43344, "output": 36981, "wage": 8}, {"city": "Liverpool", "year": 1839, "industry": "Railways", "workers": 37521, "output": 52546, "wage": 64}, {"city": "Birmingham", "year": 1862, "industry": "Coal Mining", "workers": 27519, "output": 280503, "wage": 61}, {"city": "Liverpool", "year": 1845, "industry": "Textiles", "workers": 24570, "output": 251664, "wage": 56}, {"city": "Leeds", "year": 1891, "industry": "Steel", "workers": 5826, "output": 287807, "wage": 73}, {"city": "London", "year": 1899, "industry": "Steel", "workers": 27766, "output": 115632, "wage": 55}, {"city": "Liverpool", "year": 1849, "industry": "Coal Mining", "workers": 16832, "output": 218926, "wage": 141}, {"city": "Edinburgh", "year": 1864, "industry": "Railways", "workers": 15037, "output": 285741, "wage": 105}, {"city": "Glasgow", "year": 1853, "industry": "Railways", "workers": 28681, "output": 197869, "wage": 58}, {"city": "Edinburgh", "year": 1887, "industry": "Steel", "workers": 20077, "output": 150752, "wage": 22}, {"city": "Glasgow", "year": 1856, "industry": "Railways", "workers": 23044, "output": 102216, "wage": 123}, {"city": "Glasgow", "year": 1879, "industry": "Steel", "workers": 46969, "output": 70107, "wage": 64}, {"city": "Glasgow", "year": 1891, "industry": "Railways", "workers": 5068, "output": 141791, "wage": 71}, {"city": "Glasgow", "year": 1893, "industry": "Coal Mining", "workers": 5543, "output": 146944, "wage": 76}, {"city": "Glasgow", "year": 1895, "industry": "Railways", "workers": 28414, "output": 284983, "wage": 5}, {"city": "Manchester", "year": 1893, "industry": "Railways", "workers": 3419, "output": 170691, "wage": 101}, {"city": "Liverpool", "year": 1885, "industry": "Railways", "workers": 21218, "output": 289466, "wage": 13}, {"city": "London", "year": 1896, "industry": "Shipbuilding", "workers": 18692, "output": 60484, "wage": 68}, {"city": "Birmingham", "year": 1877, "industry": "Shipbuilding", "workers": 41590, "output": 115652, "wage": 76}, {"city": "Leeds", "year": 1899, "industry": "Steel", "workers": 25461, "output": 142474, "wage": 97}, {"city": "Liverpool", "year": 1846, "industry": "Coal Mining", "workers": 47003, "output": 5270, "wage": 116}, {"city": "London", "year": 1849, "industry": "Coal Mining", "workers": 6580, "output": 98930, "wage": 32}, {"city": "Liverpool", "year": 1890, "industry": "Shipbuilding", "workers": 49736, "output": 270568, "wage": 82}, {"city": "Liverpool", "year": 1851, "industry": "Steel", "workers": 23087, "output": 286367, "wage": 106}, {"city": "Manchester", "year": 1900, "industry": "Coal Mining", "workers": 6204, "output": 256884, "wage": 117}, {"city": "Bristol", "year": 1854, "industry": "Coal Mining", "workers": 18142, "output": 157080, "wage": 93}, {"city": "Glasgow", "year": 1885, "industry": "Railways", "workers": 30874, "output": 279146, "wage": 73}, {"city": "Leeds", "year": 1841, "industry": "Shipbuilding", "workers": 43192, "output": 60799, "wage": 17}, {"city": "Edinburgh", "year": 1860, "industry": "Coal Mining", "workers": 7335, "output": 285582, "wage": 16}, {"city": "Glasgow", "year": 1887, "industry": "Shipbuilding", "workers": 16535, "output": 8961, "wage": 15}, {"city": "Birmingham", "year": 1876, "industry": "Railways", "workers": 6871, "output": 16105, "wage": 61}, {"city": "Birmingham", "year": 1895, "industry": "Shipbuilding", "workers": 10945, "output": 103633, "wage": 82}, {"city": "Leeds", "year": 1870, "industry": "Railways", "workers": 33667, "output": 83044, "wage": 63}, {"city": "Leeds", "year": 1842, "industry": "Coal Mining", "workers": 44184, "output": 140062, "wage": 16}, {"city": "Bristol", "year": 1864, "industry": "Textiles", "workers": 26649, "output": 294800, "wage": 65}, {"city": "Liverpool", "year": 1850, "industry": "Coal Mining", "workers": 18035, "output": 49323, "wage": 120}, {"city": "Manchester", "year": 1897, "industry": "Coal Mining", "workers": 48153, "output": 263697, "wage": 102}, {"city": "Liverpool", "year": 1858, "industry": "Railways", "workers": 36151, "output": 230919, "wage": 11}, {"city": "Leeds", "year": 1881, "industry": "Coal Mining", "workers": 10616, "output": 98149, "wage": 96}, {"city": "Liverpool", "year": 1872, "industry": "Shipbuilding", "workers": 16000, "output": 119276, "wage": 147}, {"city": "London", "year": 1851, "industry": "Coal Mining", "workers": 27852, "output": 14719, "wage": 102}, {"city": "Manchester", "year": 1855, "industry": "Shipbuilding", "workers": 32250, "output": 200265, "wage": 92}, {"city": "Leeds", "year": 1882, "industry": "Textiles", "workers": 8010, "output": 72304, "wage": 74}, {"city": "London", "year": 1893, "industry": "Shipbuilding", "workers": 46993, "output": 124942, "wage": 18}, {"city": "Liverpool", "year": 1892, "industry": "Shipbuilding", "workers": 28002, "output": 270859, "wage": 74}, {"city": "Birmingham", "year": 1892, "industry": "Railways", "workers": 49031, "output": 277060, "wage": 57}, {"city": "Liverpool", "year": 1852, "industry": "Railways", "workers": 19623, "output": 85268, "wage": 86}, {"city": "Birmingham", "year": 1898, "industry": "Railways", "workers": 27805, "output": 78728, "wage": 107}, {"city": "London", "year": 1879, "industry": "Shipbuilding", "workers": 9842, "output": 79499, "wage": 120}, {"city": "Liverpool", "year": 1884, "industry": "Coal Mining", "workers": 9998, "output": 64742, "wage": 93}, {"city": "Liverpool", "year": 1899, "industry": "Railways", "workers": 17746, "output": 165870, "wage": 91}, {"city": "London", "year": 1853, "industry": "Coal Mining", "workers": 4400, "output": 149753, "wage": 22}, {"city": "Birmingham", "year": 1879, "industry": "Coal Mining", "workers": 49517, "output": 155195, "wage": 128}, {"city": "Leeds", "year": 1873, "industry": "Coal Mining", "workers": 1832, "output": 246621, "wage": 73}, {"city": "Glasgow", "year": 1865, "industry": "Railways", "workers": 49873, "output": 99018, "wage": 112}, {"city": "London", "year": 1891, "industry": "Coal Mining", "workers": 647, "output": 185623, "wage": 75}, {"city": "Liverpool", "year": 1837, "industry": "Textiles", "workers": 46844, "output": 274819, "wage": 139}, {"city": "Manchester", "year": 1879, "industry": "Shipbuilding", "workers": 44913, "output": 166756, "wage": 49}, {"city": "Liverpool", "year": 1867, "industry": "Railways", "workers": 46538, "output": 234362, "wage": 35}, {"city": "London", "year": 1877, "industry": "Steel", "workers": 18113, "output": 36022, "wage": 57}, {"city": "Liverpool", "year": 1877, "industry": "Coal Mining", "workers": 26738, "output": 20575, "wage": 27}, {"city": "Birmingham", "year": 1882, "industry": "Shipbuilding", "workers": 35499, "output": 180098, "wage": 58}, {"city": "Bristol", "year": 1847, "industry": "Steel", "workers": 37321, "output": 246493, "wage": 54}, {"city": "Glasgow", "year": 1893, "industry": "Steel", "workers": 35224, "output": 219274, "wage": 95}, {"city": "Birmingham", "year": 1861, "industry": "Shipbuilding", "workers": 10637, "output": 137098, "wage": 82}, {"city": "Leeds", "year": 1855, "industry": "Textiles", "workers": 45787, "output": 215502, "wage": 13}, {"city": "Liverpool", "year": 1891, "industry": "Shipbuilding", "workers": 22317, "output": 168479, "wage": 52}, {"city": "Bristol", "year": 1870, "industry": "Coal Mining", "workers": 38404, "output": 214326, "wage": 145}, {"city": "Leeds", "year": 1878, "industry": "Coal Mining", "workers": 9066, "output": 75154, "wage": 119}, {"city": "Glasgow", "year": 1843, "industry": "Coal Mining", "workers": 6191, "output": 211800, "wage": 42}, {"city": "Manchester", "year": 1872, "industry": "Steel", "workers": 39005, "output": 171673, "wage": 14}, {"city": "Leeds", "year": 1894, "industry": "Railways", "workers": 37358, "output": 195809, "wage": 38}, {"city": "Leeds", "year": 1900, "industry": "Textiles", "workers": 16192, "output": 124693, "wage": 97}, {"city": "London", "year": 1882, "industry": "Shipbuilding", "workers": 4311, "output": 295477, "wage": 143}, {"city": "London", "year": 1839, "industry": "Steel", "workers": 48898, "output": 4213, "wage": 135}, {"city": "Manchester", "year": 1891, "industry": "Coal Mining", "workers": 8338, "output": 299817, "wage": 147}, {"city": "London", "year": 1884, "industry": "Shipbuilding", "workers": 42265, "output": 274549, "wage": 95}, {"city": "Leeds", "year": 1853, "industry": "Textiles", "workers": 29402, "output": 51175, "wage": 8}, {"city": "Bristol", "year": 1867, "industry": "Railways", "workers": 7635, "output": 28699, "wage": 24}, {"city": "Edinburgh", "year": 1898, "industry": "Coal Mining", "workers": 25426, "output": 295922, "wage": 60}, {"city": "Glasgow", "year": 1887, "industry": "Railways", "workers": 6033, "output": 87144, "wage": 79}, {"city": "Glasgow", "year": 1897, "industry": "Steel", "workers": 9361, "output": 41894, "wage": 55}, {"city": "Bristol", "year": 1883, "industry": "Railways", "workers": 33102, "output": 113884, "wage": 120}, {"city": "Leeds", "year": 1887, "industry": "Coal Mining", "workers": 13025, "output": 76431, "wage": 137}, {"city": "Glasgow", "year": 1900, "industry": "Coal Mining", "workers": 16123, "output": 297569, "wage": 8}, {"city": "London", "year": 1854, "industry": "Textiles", "workers": 28965, "output": 263745, "wage": 14}, {"city": "Manchester", "year": 1868, "industry": "Steel", "workers": 13387, "output": 179843, "wage": 110}, {"city": "Leeds", "year": 1896, "industry": "Textiles", "workers": 35977, "output": 211366, "wage": 111}, {"city": "Edinburgh", "year": 1893, "industry": "Railways", "workers": 22227, "output": 166713, "wage": 129}, {"city": "Manchester", "year": 1858, "industry": "Shipbuilding", "workers": 10786, "output": 161229, "wage": 136}, {"city": "London", "year": 1869, "industry": "Coal Mining", "workers": 13524, "output": 243806, "wage": 83}, {"city": "London", "year": 1898, "industry": "Textiles", "workers": 18647, "output": 24845, "wage": 29}, {"city": "Edinburgh", "year": 1860, "industry": "Coal Mining", "workers": 28683, "output": 118152, "wage": 74}, {"city": "Birmingham", "year": 1886, "industry": "Shipbuilding", "workers": 48798, "output": 238085, "wage": 45}, {"city": "Bristol", "year": 1898, "industry": "Coal Mining", "workers": 40908, "output": 131229, "wage": 77}, {"city": "Leeds", "year": 1896, "industry": "Railways", "workers": 25599, "output": 200485, "wage": 147}, {"city": "Bristol", "year": 1865, "industry": "Shipbuilding", "workers": 18712, "output": 88214, "wage": 13}, {"city": "Manchester", "year": 1864, "industry": "Steel", "workers": 38286, "output": 224094, "wage": 117}, {"city": "Leeds", "year": 1848, "industry": "Textiles", "workers": 47515, "output": 280520, "wage": 40}, {"city": "Liverpool", "year": 1846, "industry": "Coal Mining", "workers": 3428, "output": 101927, "wage": 136}, {"city": "Glasgow", "year": 1840, "industry": "Railways", "workers": 35811, "output": 161478, "wage": 130}, {"city": "Bristol", "year": 1853, "industry": "Textiles", "workers": 40650, "output": 135914, "wage": 5}, {"city": "Manchester", "year": 1888, "industry": "Coal Mining", "workers": 33781, "output": 55208, "wage": 53}, {"city": "Edinburgh", "year": 1846, "industry": "Railways", "workers": 16074, "output": 12541, "wage": 52}, {"city": "Manchester", "year": 1856, "industry": "Shipbuilding", "workers": 11766, "output": 92539, "wage": 101}, {"city": "Bristol", "year": 1840, "industry": "Steel", "workers": 12283, "output": 53685, "wage": 53}, {"city": "Birmingham", "year": 1869, "industry": "Coal Mining", "workers": 6518, "output": 5570, "wage": 140}, {"city": "Manchester", "year": 1885, "industry": "Coal Mining", "workers": 1890, "output": 34187, "wage": 137}, {"city": "Manchester", "year": 1846, "industry": "Coal Mining", "workers": 38298, "output": 111842, "wage": 35}, {"city": "Manchester", "year": 1879, "industry": "Steel", "workers": 812, "output": 5442, "wage": 118}, {"city": "Liverpool", "year": 1877, "industry": "Coal Mining", "workers": 5876, "output": 274682, "wage": 146}, {"city": "Bristol", "year": 1851, "industry": "Steel", "workers": 15465, "output": 55672, "wage": 8}, {"city": "Glasgow", "year": 1894, "industry": "Steel", "workers": 49402, "output": 182016, "wage": 87}, {"city": "Birmingham", "year": 1874, "industry": "Shipbuilding", "workers": 48223, "output": 292514, "wage": 33}, {"city": "Edinburgh", "year": 1884, "industry": "Textiles", "workers": 22898, "output": 105383, "wage": 85}, {"city": "Glasgow", "year": 1896, "industry": "Railways", "workers": 4205, "output": 182743, "wage": 54}, {"city": "Bristol", "year": 1861, "industry": "Steel", "workers": 20798, "output": 40157, "wage": 147}, {"city": "Bristol", "year": 1857, "industry": "Textiles", "workers": 41965, "output": 200537, "wage": 112}, {"city": "Birmingham", "year": 1870, "industry": "Steel", "workers": 24444, "output": 15219, "wage": 105}, {"city": "Manchester", "year": 1857, "industry": "Shipbuilding", "workers": 20916, "output": 107627, "wage": 108}, {"city": "Edinburgh", "year": 1861, "industry": "Shipbuilding", "workers": 11941, "output": 197845, "wage": 102}, {"city": "Birmingham", "year": 1875, "industry": "Shipbuilding", "workers": 42304, "output": 148030, "wage": 67}, {"city": "Birmingham", "year": 1844, "industry": "Shipbuilding", "workers": 25505, "output": 180274, "wage": 94}, {"city": "Liverpool", "year": 1849, "industry": "Textiles", "workers": 35235, "output": 38140, "wage": 121}, {"city": "Bristol", "year": 1899, "industry": "Coal Mining", "workers": 26642, "output": 90454, "wage": 84}, {"city": "Liverpool", "year": 1847, "industry": "Railways", "workers": 17848, "output": 252076, "wage": 119}, {"city": "Birmingham", "year": 1845, "industry": "Steel", "workers": 15542, "output": 100570, "wage": 46}, {"city": "Glasgow", "year": 1888, "industry": "Coal Mining", "workers": 4340, "output": 267289, "wage": 74}, {"city": "Edinburgh", "year": 1838, "industry": "Textiles", "workers": 31327, "output": 174196, "wage": 62}, {"city": "Manchester", "year": 1865, "industry": "Textiles", "workers": 19723, "output": 196894, "wage": 55}, {"city": "Manchester", "year": 1887, "industry": "Railways", "workers": 9339, "output": 94947, "wage": 81}, {"city": "Liverpool", "year": 1865, "industry": "Railways", "workers": 35372, "output": 161068, "wage": 107}, {"city": "Manchester", "year": 1875, "industry": "Shipbuilding", "workers": 15024, "output": 244000, "wage": 30}, {"city": "Edinburgh", "year": 1853, "industry": "Coal Mining", "workers": 31562, "output": 27440, "wage": 11}, {"city": "London", "year": 1865, "industry": "Textiles", "workers": 39297, "output": 203785, "wage": 42}, {"city": "Bristol", "year": 1883, "industry": "Coal Mining", "workers": 320, "output": 208288, "wage": 107}, {"city": "Liverpool", "year": 1842, "industry": "Steel", "workers": 30845, "output": 223985, "wage": 53}, {"city": "Leeds", "year": 1870, "industry": "Shipbuilding", "workers": 19676, "output": 127745, "wage": 100}, {"city": "Manchester", "year": 1841, "industry": "Coal Mining", "workers": 25377, "output": 190330, "wage": 114}, {"city": "Birmingham", "year": 1875, "industry": "Steel", "workers": 22994, "output": 262362, "wage": 13}, {"city": "London", "year": 1897, "industry": "Railways", "workers": 38848, "output": 235298, "wage": 130}, {"city": "Edinburgh", "year": 1880, "industry": "Shipbuilding", "workers": 21020, "output": 246691, "wage": 126}, {"city": "Edinburgh", "year": 1883, "industry": "Shipbuilding", "workers": 2116, "output": 139940, "wage": 99}, {"city": "Glasgow", "year": 1847, "industry": "Steel", "workers": 30032, "output": 92889, "wage": 7}, {"city": "Liverpool", "year": 1900, "industry": "Shipbuilding", "workers": 683, "output": 191374, "wage": 131}, {"city": "London", "year": 1868, "industry": "Textiles", "workers": 46815, "output": 23572, "wage": 127}, {"city": "Glasgow", "year": 1857, "industry": "Shipbuilding", "workers": 24853, "output": 162836, "wage": 87}, {"city": "Glasgow", "year": 1880, "industry": "Coal Mining", "workers": 43869, "output": 6738, "wage": 60}, {"city": "Glasgow", "year": 1865, "industry": "Railways", "workers": 9120, "output": 139638, "wage": 37}, {"city": "Manchester", "year": 1844, "industry": "Coal Mining", "workers": 5255, "output": 245314, "wage": 89}, {"city": "Liverpool", "year": 1865, "industry": "Steel", "workers": 15944, "output": 219505, "wage": 70}, {"city": "Bristol", "year": 1859, "industry": "Shipbuilding", "workers": 24065, "output": 246745, "wage": 18}, {"city": "London", "year": 1847, "industry": "Railways", "workers": 49619, "output": 146559, "wage": 124}, {"city": "Edinburgh", "year": 1842, "industry": "Railways", "workers": 42218, "output": 297927, "wage": 74}, {"city": "Bristol", "year": 1889, "industry": "Shipbuilding", "workers": 48019, "output": 268758, "wage": 136}, {"city": "Birmingham", "year": 1898, "industry": "Coal Mining", "workers": 6162, "output": 101788, "wage": 10}, {"city": "Edinburgh", "year": 1899, "industry": "Textiles", "workers": 18066, "output": 123451, "wage": 137}, {"city": "Birmingham", "year": 1851, "industry": "Steel", "workers": 4643, "output": 187722, "wage": 105}, {"city": "Liverpool", "year": 1839, "industry": "Shipbuilding", "workers": 35342, "output": 7945, "wage": 127}, {"city": "Glasgow", "year": 1868, "industry": "Textiles", "workers": 11695, "output": 177013, "wage": 56}, {"city": "London", "year": 1857, "industry": "Shipbuilding", "workers": 9015, "output": 83549, "wage": 107}, {"city": "Liverpool", "year": 1843, "industry": "Steel", "workers": 5702, "output": 169372, "wage": 134}, {"city": "Liverpool", "year": 1847, "industry": "Coal Mining", "workers": 36271, "output": 7724, "wage": 16}, {"city": "Manchester", "year": 1881, "industry": "Coal Mining", "workers": 48827, "output": 101866, "wage": 125}, {"city": "Edinburgh", "year": 1887, "industry": "Steel", "workers": 39575, "output": 230538, "wage": 88}, {"city": "Edinburgh", "year": 1893, "industry": "Steel", "workers": 45656, "output": 120475, "wage": 84}, {"city": "Birmingham", "year": 1841, "industry": "Coal Mining", "workers": 3907, "output": 93933, "wage": 69}, {"city": "Glasgow", "year": 1840, "industry": "Coal Mining", "workers": 4408, "output": 25359, "wage": 43}, {"city": "London", "year": 1881, "industry": "Shipbuilding", "workers": 24054, "output": 228202, "wage": 93}, {"city": "Leeds", "year": 1897, "industry": "Textiles", "workers": 23804, "output": 24579, "wage": 111}, {"city": "Bristol", "year": 1884, "industry": "Shipbuilding", "workers": 25744, "output": 279543, "wage": 120}, {"city": "Liverpool", "year": 1840, "industry": "Railways", "workers": 3124, "output": 259216, "wage": 149}, {"city": "Birmingham", "year": 1865, "industry": "Textiles", "workers": 43936, "output": 259727, "wage": 103}, {"city": "Leeds", "year": 1853, "industry": "Textiles", "workers": 29124, "output": 130786, "wage": 93}, {"city": "Leeds", "year": 1852, "industry": "Steel", "workers": 31850, "output": 201322, "wage": 19}, {"city": "Manchester", "year": 1896, "industry": "Shipbuilding", "workers": 16220, "output": 94549, "wage": 97}, {"city": "Manchester", "year": 1856, "industry": "Textiles", "workers": 7761, "output": 250356, "wage": 88}, {"city": "Manchester", "year": 1844, "industry": "Textiles", "workers": 13926, "output": 27170, "wage": 141}, {"city": "Edinburgh", "year": 1847, "industry": "Steel", "workers": 18532, "output": 116337, "wage": 131}, {"city": "Bristol", "year": 1895, "industry": "Coal Mining", "workers": 48526, "output": 94818, "wage": 88}, {"city": "Manchester", "year": 1840, "industry": "Railways", "workers": 12694, "output": 201858, "wage": 21}, {"city": "Bristol", "year": 1896, "industry": "Coal Mining", "workers": 32612, "output": 102323, "wage": 46}, {"city": "Leeds", "year": 1873, "industry": "Textiles", "workers": 5230, "output": 274032, "wage": 25}, {"city": "Glasgow", "year": 1853, "industry": "Railways", "workers": 20181, "output": 19221, "wage": 115}, {"city": "London", "year": 1895, "industry": "Coal Mining", "workers": 3458, "output": 268658, "wage": 82}, {"city": "Liverpool", "year": 1886, "industry": "Coal Mining", "workers": 36635, "output": 160231, "wage": 67}, {"city": "Manchester", "year": 1849, "industry": "Shipbuilding", "workers": 5965, "output": 277662, "wage": 21}, {"city": "Liverpool", "year": 1866, "industry": "Shipbuilding", "workers": 38661, "output": 192750, "wage": 37}, {"city": "Birmingham", "year": 1881, "industry": "Railways", "workers": 5247, "output": 240285, "wage": 130}, {"city": "Edinburgh", "year": 1874, "industry": "Railways", "workers": 5843, "output": 296798, "wage": 14}, {"city": "Glasgow", "year": 1885, "industry": "Textiles", "workers": 48831, "output": 205991, "wage": 25}, {"city": "Manchester", "year": 1867, "industry": "Shipbuilding", "workers": 55, "output": 119639, "wage": 84}, {"city": "Leeds", "year": 1867, "industry": "Steel", "workers": 2779, "output": 57299, "wage": 20}, {"city": "Bristol", "year": 1879, "industry": "Textiles", "workers": 29287, "output": 229195, "wage": 113}, {"city": "London", "year": 1846, "industry": "Steel", "workers": 48778, "output": 149108, "wage": 17}, {"city": "Manchester", "year": 1851, "industry": "Shipbuilding", "workers": 1332, "output": 215621, "wage": 100}, {"city": "Glasgow", "year": 1852, "industry": "Coal Mining", "workers": 39675, "output": 224399, "wage": 49}, {"city": "Manchester", "year": 1844, "industry": "Coal Mining", "workers": 5121, "output": 227557, "wage": 51}, {"city": "Leeds", "year": 1875, "industry": "Textiles", "workers": 31601, "output": 282621, "wage": 124}, {"city": "Birmingham", "year": 1859, "industry": "Railways", "workers": 20591, "output": 104011, "wage": 60}, {"city": "London", "year": 1879, "industry": "Shipbuilding", "workers": 25842, "output": 213737, "wage": 82}, {"city": "Manchester", "year": 1855, "industry": "Steel", "workers": 25694, "output": 264087, "wage": 87}, {"city": "London", "year": 1860, "industry": "Steel", "workers": 44692, "output": 72544, "wage": 137}, {"city": "Glasgow", "year": 1853, "industry": "Textiles", "workers": 33488, "output": 205782, "wage": 74}, {"city": "Edinburgh", "year": 1889, "industry": "Textiles", "workers": 45720, "output": 224200, "wage": 13}, {"city": "London", "year": 1899, "industry": "Shipbuilding", "workers": 32995, "output": 259065, "wage": 135}, {"city": "Birmingham", "year": 1893, "industry": "Coal Mining", "workers": 7824, "output": 191465, "wage": 39}, {"city": "London", "year": 1843, "industry": "Textiles", "workers": 46728, "output": 90258, "wage": 84}, {"city": "Bristol", "year": 1879, "industry": "Shipbuilding", "workers": 14592, "output": 90347, "wage": 39}, {"city": "London", "year": 1886, "industry": "Coal Mining", "workers": 35817, "output": 1769, "wage": 101}, {"city": "Glasgow", "year": 1881, "industry": "Railways", "workers": 38485, "output": 148853, "wage": 8}, {"city": "Edinburgh", "year": 1893, "industry": "Railways", "workers": 19378, "output": 275357, "wage": 63}, {"city": "Bristol", "year": 1898, "industry": "Railways", "workers": 39935, "output": 110983, "wage": 62}, {"city": "Glasgow", "year": 1896, "industry": "Steel", "workers": 17650, "output": 78361, "wage": 90}, {"city": "Glasgow", "year": 1894, "industry": "Railways", "workers": 26400, "output": 9312, "wage": 60}, {"city": "Edinburgh", "year": 1859, "industry": "Shipbuilding", "workers": 4206, "output": 222147, "wage": 41}, {"city": "Leeds", "year": 1867, "industry": "Textiles", "workers": 2938, "output": 254916, "wage": 75}, {"city": "Bristol", "year": 1867, "industry": "Coal Mining", "workers": 20224, "output": 103620, "wage": 90}, {"city": "Bristol", "year": 1880, "industry": "Shipbuilding", "workers": 30522, "output": 298741, "wage": 126}, {"city": "Bristol", "year": 1875, "industry": "Coal Mining", "workers": 43811, "output": 33847, "wage": 19}, {"city": "Leeds", "year": 1847, "industry": "Textiles", "workers": 17907, "output": 65411, "wage": 122}, {"city": "Liverpool", "year": 1886, "industry": "Steel", "workers": 3508, "output": 267022, "wage": 19}, {"city": "London", "year": 1899, "industry": "Textiles", "workers": 40257, "output": 177090, "wage": 99}, {"city": "Manchester", "year": 1890, "industry": "Textiles", "workers": 28871, "output": 84134, "wage": 64}, {"city": "Edinburgh", "year": 1838, "industry": "Textiles", "workers": 41952, "output": 44959, "wage": 113}, {"city": "Edinburgh", "year": 1876, "industry": "Coal Mining", "workers": 27956, "output": 77962, "wage": 103}, {"city": "Bristol", "year": 1858, "industry": "Textiles", "workers": 29715, "output": 102628, "wage": 101}, {"city": "Leeds", "year": 1891, "industry": "Shipbuilding", "workers": 38009, "output": 159344, "wage": 101}, {"city": "Leeds", "year": 1882, "industry": "Railways", "workers": 42786, "output": 190233, "wage": 59}, {"city": "Birmingham", "year": 1865, "industry": "Railways", "workers": 44991, "output": 173445, "wage": 28}, {"city": "Glasgow", "year": 1844, "industry": "Shipbuilding", "workers": 5302, "output": 123709, "wage": 75}, {"city": "London", "year": 1879, "industry": "Steel", "workers": 42460, "output": 15182, "wage": 111}, {"city": "Bristol", "year": 1858, "industry": "Railways", "workers": 43768, "output": 255546, "wage": 60}, {"city": "Bristol", "year": 1869, "industry": "Coal Mining", "workers": 2780, "output": 261328, "wage": 53}, {"city": "Leeds", "year": 1851, "industry": "Steel", "workers": 27437, "output": 110961, "wage": 91}, {"city": "London", "year": 1878, "industry": "Textiles", "workers": 5886, "output": 8043, "wage": 101}, {"city": "London", "year": 1861, "industry": "Steel", "workers": 35219, "output": 77541, "wage": 134}, {"city": "Birmingham", "year": 1887, "industry": "Textiles", "workers": 49406, "output": 125559, "wage": 89}, {"city": "Manchester", "year": 1847, "industry": "Railways", "workers": 26736, "output": 285355, "wage": 146}, {"city": "Manchester", "year": 1880, "industry": "Textiles", "workers": 13733, "output": 44171, "wage": 67}, {"city": "Manchester", "year": 1845, "industry": "Steel", "workers": 24286, "output": 140013, "wage": 106}, {"city": "Liverpool", "year": 1893, "industry": "Textiles", "workers": 19733, "output": 191682, "wage": 67}, {"city": "Birmingham", "year": 1849, "industry": "Shipbuilding", "workers": 28159, "output": 61419, "wage": 39}, {"city": "Birmingham", "year": 1887, "industry": "Textiles", "workers": 8968, "output": 239995, "wage": 39}, {"city": "Glasgow", "year": 1895, "industry": "Shipbuilding", "workers": 21609, "output": 172747, "wage": 56}, {"city": "Bristol", "year": 1863, "industry": "Coal Mining", "workers": 11901, "output": 68319, "wage": 143}, {"city": "Liverpool", "year": 1842, "industry": "Shipbuilding", "workers": 12947, "output": 59014, "wage": 90}, {"city": "Glasgow", "year": 1887, "industry": "Steel", "workers": 19787, "output": 150154, "wage": 99}, {"city": "London", "year": 1897, "industry": "Coal Mining", "workers": 796, "output": 100139, "wage": 134}, {"city": "Glasgow", "year": 1888, "industry": "Steel", "workers": 1088, "output": 254152, "wage": 11}, {"city": "Manchester", "year": 1839, "industry": "Coal Mining", "workers": 19614, "output": 233339, "wage": 81}, {"city": "Edinburgh", "year": 1862, "industry": "Coal Mining", "workers": 22186, "output": 164040, "wage": 64}, {"city": "Manchester", "year": 1864, "industry": "Shipbuilding", "workers": 25297, "output": 288228, "wage": 80}, {"city": "Glasgow", "year": 1873, "industry": "Coal Mining", "workers": 9870, "output": 214602, "wage": 122}, {"city": "Birmingham", "year": 1880, "industry": "Steel", "workers": 34592, "output": 85325, "wage": 81}, {"city": "Liverpool", "year": 1888, "industry": "Steel", "workers": 35328, "output": 60241, "wage": 53}, {"city": "Glasgow", "year": 1892, "industry": "Coal Mining", "workers": 45220, "output": 17815, "wage": 138}, {"city": "Bristol", "year": 1889, "industry": "Coal Mining", "workers": 49312, "output": 276772, "wage": 51}, {"city": "Liverpool", "year": 1894, "industry": "Textiles", "workers": 39861, "output": 38933, "wage": 89}, {"city": "Birmingham", "year": 1890, "industry": "Textiles", "workers": 5685, "output": 149306, "wage": 20}, {"city": "Glasgow", "year": 1890, "industry": "Coal Mining", "workers": 5290, "output": 36017, "wage": 21}, {"city": "Glasgow", "year": 1871, "industry": "Coal Mining", "workers": 33031, "output": 157825, "wage": 120}, {"city": "Birmingham", "year": 1882, "industry": "Railways", "workers": 18953, "output": 222977, "wage": 69}, {"city": "Liverpool", "year": 1884, "industry": "Textiles", "workers": 11993, "output": 41686, "wage": 108}, {"city": "Leeds", "year": 1898, "industry": "Shipbuilding", "workers": 35226, "output": 259743, "wage": 105}, {"city": "Birmingham", "year": 1867, "industry": "Steel", "workers": 20659, "output": 98807, "wage": 109}, {"city": "Leeds", "year": 1894, "industry": "Shipbuilding", "workers": 21494, "output": 279012, "wage": 42}, {"city": "Manchester", "year": 1900, "industry": "Textiles", "workers": 9564, "output": 5093, "wage": 116}, {"city": "Liverpool", "year": 1879, "industry": "Textiles", "workers": 5570, "output": 68435, "wage": 34}, {"city": "Glasgow", "year": 1849, "industry": "Railways", "workers": 4930, "output": 269625, "wage": 80}, {"city": "Liverpool", "year": 1837, "industry": "Railways", "workers": 6432, "output": 151175, "wage": 95}, {"city": "Bristol", "year": 1889, "industry": "Shipbuilding", "workers": 1286, "output": 1360, "wage": 139}, {"city": "Edinburgh", "year": 1856, "industry": "Railways", "workers": 34443, "output": 205629, "wage": 113}, {"city": "Leeds", "year": 1839, "industry": "Railways", "workers": 42418, "output": 288314, "wage": 34}, {"city": "Manchester", "year": 1849, "industry": "Coal Mining", "workers": 20786, "output": 30193, "wage": 87}, {"city": "Bristol", "year": 1867, "industry": "Coal Mining", "workers": 9015, "output": 231272, "wage": 80}, {"city": "Glasgow", "year": 1860, "industry": "Railways", "workers": 4859, "output": 284350, "wage": 141}, {"city": "Manchester", "year": 1838, "industry": "Steel", "workers": 27815, "output": 185292, "wage": 111}, {"city": "London", "year": 1843, "industry": "Steel", "workers": 23540, "output": 65155, "wage": 20}, {"city": "Bristol", "year": 1850, "industry": "Coal Mining", "workers": 46214, "output": 39062, "wage": 133}, {"city": "Edinburgh", "year": 1861, "industry": "Steel", "workers": 38025, "output": 136289, "wage": 78}, {"city": "Birmingham", "year": 1854, "industry": "Steel", "workers": 12063, "output": 184333, "wage": 109}, {"city": "Liverpool", "year": 1890, "industry": "Coal Mining", "workers": 16589, "output": 21566, "wage": 140}, {"city": "Bristol", "year": 1886, "industry": "Steel", "workers": 28524, "output": 174110, "wage": 133}, {"city": "Bristol", "year": 1876, "industry": "Shipbuilding", "workers": 24668, "output": 89632, "wage": 147}, {"city": "Edinburgh", "year": 1888, "industry": "Shipbuilding", "workers": 9822, "output": 25013, "wage": 55}, {"city": "London", "year": 1855, "industry": "Textiles", "workers": 303, "output": 79542, "wage": 76}, {"city": "London", "year": 1887, "industry": "Steel", "workers": 33368, "output": 234346, "wage": 103}, {"city": "Manchester", "year": 1865, "industry": "Shipbuilding", "workers": 16062, "output": 185760, "wage": 29}, {"city": "Liverpool", "year": 1850, "industry": "Shipbuilding", "workers": 16572, "output": 194945, "wage": 39}, {"city": "London", "year": 1864, "industry": "Shipbuilding", "workers": 38035, "output": 149920, "wage": 149}, {"city": "Birmingham", "year": 1891, "industry": "Railways", "workers": 44370, "output": 174736, "wage": 15}, {"city": "Manchester", "year": 1881, "industry": "Coal Mining", "workers": 44481, "output": 126070, "wage": 59}, {"city": "Edinburgh", "year": 1847, "industry": "Steel", "workers": 38242, "output": 13003, "wage": 14}, {"city": "Leeds", "year": 1872, "industry": "Shipbuilding", "workers": 29904, "output": 255520, "wage": 144}, {"city": "Leeds", "year": 1839, "industry": "Textiles", "workers": 1608, "output": 68613, "wage": 24}, {"city": "Glasgow", "year": 1900, "industry": "Railways", "workers": 48869, "output": 252390, "wage": 89}, {"city": "Liverpool", "year": 1848, "industry": "Railways", "workers": 13667, "output": 287147, "wage": 27}, {"city": "Manchester", "year": 1861, "industry": "Coal Mining", "workers": 25562, "output": 5437, "wage": 98}, {"city": "Edinburgh", "year": 1877, "industry": "Steel", "workers": 37374, "output": 143140, "wage": 92}, {"city": "Bristol", "year": 1887, "industry": "Textiles", "workers": 26854, "output": 89666, "wage": 68}, {"city": "Glasgow", "year": 1898, "industry": "Steel", "workers": 3241, "output": 162048, "wage": 122}, {"city": "Leeds", "year": 1856, "industry": "Shipbuilding", "workers": 25150, "output": 170048, "wage": 74}];
+
+const COLORS = {
+  'Coal Mining': 'rgba(160,160,160,0.85)',
+  'Railways':    'rgba(220,180,90,0.85)',
+  'Shipbuilding':'rgba(80,200,180,0.85)',
+  'Steel':       'rgba(190,140,210,0.85)',
+  'Textiles':    'rgba(100,170,230,0.85)',
+};
+const CITIES = ['Birmingham','Bristol','Edinburgh','Glasgow','Leeds','Liverpool','London','Manchester'];
+const INDUSTRIES = ['Coal Mining','Railways','Shipbuilding','Steel','Textiles'];
+const GOLD = 'rgba(201,168,76,';
+const CREAM_DIM = '#b8a882';
+
+Chart.defaults.color = CREAM_DIM;
+Chart.defaults.font.family = "'Crimson Text', Georgia, serif";
+
+let charts = {};
+let sortKey = 'year', sortAsc = true;
+
+function getFiltered() {
+  const city = document.getElementById('fCity').value;
+  const ind  = document.getElementById('fIndustry').value;
+  const yMin = +document.getElementById('fYearMin').value;
+  const yMax = +document.getElementById('fYearMax').value;
+  return ALL_DATA.filter(d =>
+    (!city || d.city === city) &&
+    (!ind  || d.industry === ind) &&
+    d.year >= yMin && d.year <= yMax
+  );
+}
+
+function fmt(n) {
+  if (n >= 1e6) return (n/1e6).toFixed(1)+'M';
+  if (n >= 1e3) return (n/1e3).toFixed(0)+'K';
+  return n.toString();
+}
+
+function updateKPIs(data) {
+  document.getElementById('kpiRecords').textContent = data.length.toLocaleString();
+  const totalW = data.reduce((s,d)=>s+d.workers,0);
+  const avgOut = data.length ? Math.round(data.reduce((s,d)=>s+d.output,0)/data.length) : 0;
+  const avgWage= data.length ? Math.round(data.reduce((s,d)=>s+d.wage,0)/data.length) : 0;
+  document.getElementById('kpiWorkers').textContent = fmt(totalW);
+  document.getElementById('kpiOutput').textContent  = fmt(avgOut);
+  document.getElementById('kpiWage').textContent    = avgWage + 'd';
+}
+
+const gridLines = { color: 'rgba(61,43,14,0.6)', lineWidth: 1 };
+const tickStyle = { color: CREAM_DIM, font: { size: 11, family: "'Crimson Text', Georgia, serif" } };
+
+function makeOrUpdate(id, config) {
+  if (charts[id]) { charts[id].destroy(); }
+  const ctx = document.getElementById(id).getContext('2d');
+  charts[id] = new Chart(ctx, config);
+}
+
+function updateCharts(data) {
+  const cityWorkers = CITIES.map(c => data.filter(d=>d.city===c).reduce((s,d)=>s+d.workers,0));
+  makeOrUpdate('chartCity', {
+    type: 'bar',
+    data: {
+      labels: CITIES,
+      datasets: [{ label: 'Total Workers', data: cityWorkers,
+        backgroundColor: CITIES.map((_,i)=>`rgba(201,168,76,${0.55+i*0.05})`),
+        borderColor: CITIES.map((_,i)=>`rgba(201,168,76,${0.8+i*0.025})`),
+        borderWidth: 1, borderRadius: 2 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.raw.toLocaleString() + ' workers' } } },
+      scales: {
+        x: { grid: gridLines, ticks: tickStyle },
+        y: { grid: gridLines, ticks: { ...tickStyle, callback: v => fmt(v) } }
+      }
+    }
+  });
+
+  const decades = {};
+  data.forEach(d => {
+    const dec = Math.floor(d.year/10)*10;
+    if (!decades[dec]) decades[dec] = { output: 0, count: 0 };
+    decades[dec].output += d.output;
+    decades[dec].count++;
+  });
+  const decLabels = Object.keys(decades).sort();
+  const decAvg = decLabels.map(k => Math.round(decades[k].output/decades[k].count));
+  makeOrUpdate('chartLine', {
+    type: 'line',
+    data: {
+      labels: decLabels.map(d=>d+'s'),
+      datasets: [{ label: 'Avg Output (t)', data: decAvg,
+        borderColor: GOLD+'0.9)', backgroundColor: GOLD+'0.15)',
+        borderWidth: 2, pointRadius: 5, pointBackgroundColor: GOLD+'1)',
+        tension: 0.35, fill: true }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.raw.toLocaleString() + ' tonnes avg' } } },
+      scales: {
+        x: { grid: gridLines, ticks: tickStyle },
+        y: { grid: gridLines, ticks: { ...tickStyle, callback: v => fmt(v) } }
+      }
+    }
+  });
+
+  const indWages = INDUSTRIES.map(i => {
+    const rows = data.filter(d=>d.industry===i);
+    return rows.length ? Math.round(rows.reduce((s,d)=>s+d.wage,0)/rows.length) : 0;
+  });
+  makeOrUpdate('chartWage', {
+    type: 'bar',
+    data: {
+      labels: INDUSTRIES,
+      datasets: [{ label: 'Avg Wage (pence)', data: indWages,
+        backgroundColor: INDUSTRIES.map(i=>COLORS[i]),
+        borderColor: INDUSTRIES.map(i=>COLORS[i].replace('0.85','1')),
+        borderWidth: 1, borderRadius: 2 }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' ' + ctx.raw + ' pence/week' } } },
+      scales: {
+        x: { grid: gridLines, ticks: { ...tickStyle, callback: v => v+'d' } },
+        y: { grid: gridLines, ticks: tickStyle }
+      }
+    }
+  });
+
+  const indWorkers = INDUSTRIES.map(i => data.filter(d=>d.industry===i).reduce((s,d)=>s+d.workers,0));
+  makeOrUpdate('chartDonut', {
+    type: 'doughnut',
+    data: {
+      labels: INDUSTRIES,
+      datasets: [{ data: indWorkers,
+        backgroundColor: INDUSTRIES.map(i=>COLORS[i]),
+        borderColor: '#0d0905', borderWidth: 3, hoverOffset: 8 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      cutout: '60%',
+      plugins: {
+        legend: { position: 'right', labels: { color: CREAM_DIM, font: { size: 12 }, padding: 14 } },
+        tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ': ' + fmt(ctx.raw) + ' workers' } }
+      }
+    }
+  });
+
+  const scatterDatasets = INDUSTRIES.map(ind => ({
+    label: ind,
+    data: data.filter(d=>d.industry===ind).map(d => ({ x: d.workers, y: d.output })),
+    backgroundColor: COLORS[ind],
+    pointRadius: 4, pointHoverRadius: 7
+  }));
+  makeOrUpdate('chartScatter', {
+    type: 'scatter',
+    data: { datasets: scatterDatasets },
+    options: {
+      responsive: true, maintainAspectRatio: true,
+      plugins: {
+        legend: { position: 'top', labels: { color: CREAM_DIM, font: { size: 12 }, padding: 16 } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw.x.toLocaleString()} workers, ${ctx.raw.y.toLocaleString()} t` } }
+      },
+      scales: {
+        x: { grid: gridLines, ticks: { ...tickStyle, callback: v => fmt(v) }, title: { display: true, text: 'Factory Workers', color: CREAM_DIM } },
+        y: { grid: gridLines, ticks: { ...tickStyle, callback: v => fmt(v) }, title: { display: true, text: 'Output (tonnes)', color: CREAM_DIM } }
+      }
+    }
+  });
+}
+
+function getBadgeClass(industry) {
+  if (industry === 'Coal Mining') return 'badge badge-Coal';
+  if (industry === 'Railways') return 'badge badge-Railways';
+  if (industry === 'Shipbuilding') return 'badge badge-Shipbuilding';
+  if (industry === 'Steel') return 'badge badge-Steel';
+  if (industry === 'Textiles') return 'badge badge-Textiles';
+  return 'badge';
+}
+
+function updateTable(data) {
+  const sorted = [...data].sort((a,b) => {
+    let v = a[sortKey] < b[sortKey] ? -1 : a[sortKey] > b[sortKey] ? 1 : 0;
+    return sortAsc ? v : -v;
+  });
+  const MAX = 200;
+  const shown = sorted.slice(0, MAX);
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = shown.map(d => `
+    <tr>
+      <td>${d.city}</td>
+      <td>${d.year}</td>
+      <td><span class="${getBadgeClass(d.industry)}">${d.industry}</span></td>
+      <td>${d.workers.toLocaleString()}</td>
+      <td>${d.output.toLocaleString()}</td>
+      <td>${d.wage}d</td>
+    </tr>`).join('');
+  document.getElementById('tableInfo').textContent =
+    data.length > MAX
+      ? `Showing ${MAX} of ${data.length} records. Apply filters to narrow the selection.`
+      : `Showing all ${data.length} records.`;
+  ['city','year','industry','workers','output','wage'].forEach(k => {
+    const th = document.getElementById('th-'+k);
+    if (th) {
+      th.classList.toggle('active', k === sortKey);
+      th.querySelector('.sort-icon').textContent = k === sortKey ? (sortAsc ? '↑' : '↓') : '↕';
+    }
+  });
+}
+
+function sortTable(key) {
+  if (sortKey === key) sortAsc = !sortAsc;
+  else { sortKey = key; sortAsc = true; }
+  updateTable(getFiltered());
+}
+
+function refresh() {
+  const data = getFiltered();
+  updateKPIs(data);
+  updateCharts(data);
+  updateTable(data);
+}
+
+function resetFilters() {
+  document.getElementById('fCity').value = '';
+  document.getElementById('fIndustry').value = '';
+  document.getElementById('fYearMin').value = 1837;
+  document.getElementById('fYearMax').value = 1900;
+  document.getElementById('yearLabel').textContent = '1837 – 1900';
+  refresh();
+}
+
+['fYearMin','fYearMax'].forEach(id => {
+  document.getElementById(id).addEventListener('input', () => {
+    let mn = +document.getElementById('fYearMin').value;
+    let mx = +document.getElementById('fYearMax').value;
+    if (mn > mx) { if (id==='fYearMin') mn=mx; else mx=mn; }
+    document.getElementById('fYearMin').value = mn;
+    document.getElementById('fYearMax').value = mx;
+    document.getElementById('yearLabel').textContent = `${mn} – ${mx}`;
+    refresh();
+  });
+});
+
+['fCity','fIndustry'].forEach(id => {
+  document.getElementById(id).addEventListener('change', refresh);
+});
+
+refresh();
+</script>
+</body>
+</html>

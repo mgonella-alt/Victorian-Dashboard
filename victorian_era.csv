@@ -1,0 +1,851 @@
+record_id,city,year,industry,factory_workers,industrial_output_tonnes,average_wage_pence
+1,Glasgow,1877,Shipbuilding,38201,285312,148
+2,Manchester,1843,Textiles,10983,299857,94
+3,Bristol,1877,Shipbuilding,14802,47286,98
+4,Bristol,1858,Textiles,468,26391,115
+5,Glasgow,1886,Steel,32541,207168,12
+6,Manchester,1861,Shipbuilding,1431,237455,110
+7,Manchester,1886,Railways,38670,137277,41
+8,Liverpool,1892,Textiles,34422,95904,87
+9,Liverpool,1852,Railways,39995,74800,38
+10,London,1848,Coal Mining,47289,42866,74
+11,Liverpool,1883,Shipbuilding,23966,164502,65
+12,London,1861,Textiles,22321,238323,76
+13,Manchester,1855,Railways,15883,225483,86
+14,Glasgow,1861,Steel,18516,136432,139
+15,Birmingham,1860,Coal Mining,29857,77820,5
+16,Liverpool,1871,Coal Mining,48795,127555,16
+17,Leeds,1842,Railways,16607,294893,61
+18,Manchester,1851,Shipbuilding,36294,124568,13
+19,Birmingham,1892,Steel,31517,44553,131
+20,Bristol,1868,Railways,19210,241634,56
+21,Glasgow,1884,Railways,193,240249,86
+22,Bristol,1894,Railways,27521,230773,41
+23,Manchester,1876,Railways,12167,247976,43
+24,Glasgow,1900,Railways,13789,9217,72
+25,Birmingham,1887,Railways,105,41481,10
+26,Liverpool,1893,Steel,36856,230653,57
+27,Manchester,1875,Steel,46544,241652,81
+28,Liverpool,1891,Railways,8904,62584,139
+29,London,1889,Steel,12242,185733,5
+30,Manchester,1854,Textiles,40132,291453,93
+31,Birmingham,1899,Textiles,42556,83181,17
+32,Bristol,1871,Coal Mining,40463,261578,60
+33,Manchester,1877,Textiles,21068,264536,68
+34,Edinburgh,1837,Coal Mining,36815,256356,64
+35,Leeds,1856,Steel,26114,49548,121
+36,Edinburgh,1875,Railways,13178,290609,39
+37,London,1864,Railways,36922,195708,91
+38,Manchester,1865,Textiles,26324,191839,62
+39,Leeds,1842,Steel,19342,68062,83
+40,Manchester,1862,Shipbuilding,728,28494,37
+41,Glasgow,1840,Railways,12465,46886,29
+42,Birmingham,1843,Steel,410,264173,36
+43,Leeds,1857,Railways,23474,270404,81
+44,Glasgow,1847,Textiles,27030,55077,72
+45,Birmingham,1838,Shipbuilding,9775,299858,95
+46,Birmingham,1876,Railways,9804,77920,53
+47,Manchester,1894,Steel,47296,142501,92
+48,Manchester,1858,Coal Mining,428,272475,63
+49,Edinburgh,1850,Railways,27501,193293,15
+50,Liverpool,1874,Coal Mining,4628,179379,34
+51,Leeds,1848,Steel,6891,39659,26
+52,Birmingham,1891,Railways,16046,120787,99
+53,Liverpool,1862,Shipbuilding,14673,202973,84
+54,Glasgow,1892,Textiles,16064,15372,126
+55,Glasgow,1891,Textiles,40243,155912,59
+56,Liverpool,1890,Steel,19473,80785,29
+57,London,1841,Shipbuilding,45650,65425,31
+58,Leeds,1878,Shipbuilding,10670,103826,33
+59,Bristol,1837,Textiles,29480,22616,83
+60,Bristol,1867,Coal Mining,33443,14408,128
+61,Leeds,1889,Steel,12307,189880,43
+62,Manchester,1874,Shipbuilding,16573,167386,148
+63,Glasgow,1865,Railways,33788,120845,28
+64,Manchester,1846,Steel,48682,260936,99
+65,Edinburgh,1900,Textiles,14884,78932,63
+66,Manchester,1854,Railways,13667,77198,85
+67,London,1899,Steel,44478,44940,52
+68,Leeds,1852,Steel,2871,108655,15
+69,Glasgow,1890,Coal Mining,19887,162437,138
+70,Leeds,1888,Railways,24932,15244,19
+71,Manchester,1890,Textiles,320,247569,57
+72,Bristol,1876,Steel,5404,152471,34
+73,Birmingham,1853,Coal Mining,6631,112218,8
+74,Birmingham,1880,Textiles,18801,50296,10
+75,Leeds,1894,Railways,37574,251896,72
+76,Edinburgh,1861,Textiles,28826,15093,17
+77,Leeds,1895,Railways,8496,106603,113
+78,Glasgow,1875,Textiles,6583,148396,5
+79,Leeds,1875,Railways,27920,282503,43
+80,Birmingham,1880,Steel,28526,206811,129
+81,London,1854,Railways,6245,62162,121
+82,Manchester,1881,Textiles,29143,107279,45
+83,Liverpool,1890,Shipbuilding,41736,183944,131
+84,Manchester,1857,Textiles,23496,145892,73
+85,London,1846,Textiles,49495,248771,143
+86,Manchester,1868,Textiles,22529,161706,34
+87,Leeds,1844,Shipbuilding,35142,172854,149
+88,Manchester,1863,Textiles,48105,180856,21
+89,Birmingham,1892,Textiles,31713,243247,89
+90,London,1859,Steel,1822,36430,142
+91,Birmingham,1895,Coal Mining,42331,35704,131
+92,Edinburgh,1900,Shipbuilding,11388,45968,87
+93,Leeds,1869,Shipbuilding,278,254169,83
+94,Glasgow,1841,Textiles,47893,264988,124
+95,Glasgow,1855,Shipbuilding,220,153650,32
+96,Edinburgh,1856,Shipbuilding,32832,63652,132
+97,London,1882,Railways,35152,171795,40
+98,Bristol,1847,Coal Mining,12513,256686,88
+99,Leeds,1868,Shipbuilding,26637,210402,63
+100,London,1843,Coal Mining,6386,232153,15
+101,Edinburgh,1880,Shipbuilding,46135,259606,58
+102,Glasgow,1897,Steel,42860,296762,131
+103,Glasgow,1888,Coal Mining,21221,220292,98
+104,Liverpool,1878,Railways,42752,189061,133
+105,Glasgow,1843,Shipbuilding,18194,122556,86
+106,Leeds,1874,Textiles,24882,10466,17
+107,Leeds,1880,Shipbuilding,36981,215735,49
+108,Glasgow,1874,Shipbuilding,15486,159971,110
+109,Edinburgh,1884,Shipbuilding,28299,187300,15
+110,Leeds,1862,Coal Mining,39121,249255,110
+111,Manchester,1855,Shipbuilding,45365,65033,66
+112,Edinburgh,1852,Coal Mining,10013,146640,122
+113,Leeds,1886,Railways,45433,175469,65
+114,Leeds,1865,Steel,42017,157624,127
+115,Leeds,1884,Steel,2534,263036,113
+116,Glasgow,1842,Steel,19169,150151,18
+117,Edinburgh,1844,Shipbuilding,9279,255456,83
+118,Birmingham,1849,Coal Mining,25580,288425,74
+119,Leeds,1896,Steel,26096,78858,121
+120,London,1873,Railways,28185,68552,129
+121,Birmingham,1885,Steel,23744,93299,102
+122,Birmingham,1856,Shipbuilding,48908,293221,41
+123,Birmingham,1876,Textiles,986,77154,113
+124,Manchester,1869,Steel,20680,37522,121
+125,Bristol,1890,Shipbuilding,5664,145692,5
+126,London,1841,Shipbuilding,1010,161982,120
+127,Edinburgh,1898,Textiles,14496,161319,110
+128,Bristol,1887,Steel,22733,282877,102
+129,Bristol,1879,Steel,16162,142660,16
+130,Bristol,1898,Railways,5045,249576,54
+131,Manchester,1890,Shipbuilding,24433,224420,47
+132,Birmingham,1844,Steel,2638,121551,10
+133,Manchester,1889,Steel,25666,220604,142
+134,Manchester,1839,Coal Mining,1486,79455,20
+135,Leeds,1879,Textiles,14439,197335,15
+136,Leeds,1860,Railways,5831,48917,140
+137,Bristol,1874,Textiles,3227,166815,19
+138,Glasgow,1849,Coal Mining,41963,57326,85
+139,Birmingham,1881,Coal Mining,24054,78533,143
+140,Birmingham,1869,Coal Mining,7389,260775,139
+141,Manchester,1878,Steel,43249,277710,32
+142,Manchester,1869,Textiles,46974,58408,55
+143,London,1840,Textiles,43494,50716,145
+144,London,1858,Shipbuilding,11376,289896,132
+145,Birmingham,1864,Steel,33801,69178,39
+146,Birmingham,1863,Railways,135,127616,93
+147,Manchester,1898,Railways,20692,274412,47
+148,Glasgow,1840,Shipbuilding,19128,27340,115
+149,Liverpool,1890,Coal Mining,31110,15918,21
+150,London,1891,Steel,29160,66483,90
+151,Liverpool,1879,Textiles,41578,12576,109
+152,Manchester,1874,Shipbuilding,30551,2730,101
+153,Edinburgh,1851,Textiles,26945,172731,81
+154,Bristol,1865,Textiles,32176,117592,63
+155,Edinburgh,1858,Textiles,10048,195703,137
+156,Edinburgh,1890,Coal Mining,35823,271864,89
+157,Edinburgh,1870,Railways,8596,159822,23
+158,Bristol,1859,Coal Mining,18763,273804,109
+159,Manchester,1881,Coal Mining,37822,73265,97
+160,Leeds,1857,Railways,44534,280030,70
+161,London,1844,Railways,26779,113736,7
+162,London,1865,Shipbuilding,38380,260299,98
+163,Liverpool,1847,Coal Mining,6847,170044,111
+164,Birmingham,1847,Steel,10988,19030,69
+165,Edinburgh,1854,Textiles,27346,170330,76
+166,London,1849,Steel,49284,118098,118
+167,Manchester,1870,Steel,32128,172921,137
+168,Leeds,1867,Steel,31576,261298,80
+169,Birmingham,1883,Railways,35350,116955,89
+170,Liverpool,1858,Shipbuilding,8922,88669,10
+171,Liverpool,1887,Coal Mining,23564,225584,105
+172,London,1851,Railways,41744,291072,28
+173,Bristol,1875,Shipbuilding,31577,97426,121
+174,Leeds,1897,Shipbuilding,1005,129798,98
+175,Manchester,1838,Shipbuilding,31794,34607,39
+176,Manchester,1898,Shipbuilding,24806,174542,43
+177,Bristol,1891,Textiles,30474,74801,60
+178,Glasgow,1840,Textiles,24322,215691,101
+179,London,1875,Railways,45370,117945,76
+180,Bristol,1868,Coal Mining,39058,290177,85
+181,Leeds,1897,Coal Mining,3827,54024,109
+182,London,1864,Railways,18754,105563,30
+183,London,1896,Coal Mining,47561,238717,54
+184,Leeds,1859,Railways,28985,46539,147
+185,London,1853,Coal Mining,2703,245866,73
+186,Leeds,1889,Steel,23767,284232,137
+187,Manchester,1890,Textiles,5811,97987,73
+188,Manchester,1878,Railways,33506,223185,139
+189,London,1851,Shipbuilding,3434,155909,61
+190,Manchester,1886,Coal Mining,36512,121427,57
+191,Bristol,1870,Railways,32665,260785,52
+192,Liverpool,1872,Steel,35906,135687,53
+193,Glasgow,1849,Steel,43868,280878,124
+194,Leeds,1893,Textiles,26347,198742,29
+195,Manchester,1887,Railways,21167,186492,107
+196,Manchester,1869,Railways,24278,251142,137
+197,Glasgow,1842,Coal Mining,25420,12107,64
+198,Birmingham,1874,Shipbuilding,16722,296885,127
+199,Leeds,1854,Steel,16418,8032,67
+200,Manchester,1845,Shipbuilding,40668,161624,105
+201,London,1899,Steel,4847,212650,136
+202,Glasgow,1890,Coal Mining,39099,156098,135
+203,London,1856,Textiles,5956,55743,134
+204,London,1894,Railways,4054,187078,147
+205,Edinburgh,1898,Steel,19624,40619,45
+206,Manchester,1845,Steel,26539,52155,137
+207,Bristol,1850,Railways,42053,110792,147
+208,Glasgow,1890,Textiles,15866,133028,69
+209,Leeds,1845,Steel,15600,159157,32
+210,Birmingham,1871,Shipbuilding,16715,170486,135
+211,Leeds,1882,Coal Mining,22205,272044,121
+212,London,1842,Textiles,11093,73706,84
+213,London,1854,Shipbuilding,5091,21210,110
+214,Bristol,1900,Steel,41878,34612,110
+215,Glasgow,1855,Textiles,43015,26116,123
+216,Edinburgh,1838,Railways,42213,39174,43
+217,Liverpool,1843,Textiles,34828,204654,113
+218,Edinburgh,1863,Steel,20814,183991,144
+219,London,1893,Coal Mining,12228,24976,133
+220,Bristol,1848,Shipbuilding,13968,102982,54
+221,Glasgow,1895,Railways,17550,255147,114
+222,Bristol,1878,Textiles,44059,235308,118
+223,London,1897,Coal Mining,47562,164967,37
+224,Manchester,1849,Coal Mining,41847,199642,138
+225,Liverpool,1871,Shipbuilding,47500,171060,130
+226,Bristol,1845,Textiles,12614,8633,5
+227,London,1866,Textiles,39929,32478,32
+228,Birmingham,1898,Shipbuilding,43636,264259,56
+229,Leeds,1863,Coal Mining,12069,21795,127
+230,Bristol,1899,Textiles,397,256899,115
+231,Bristol,1856,Railways,4559,119389,66
+232,Glasgow,1844,Steel,45305,90604,112
+233,Leeds,1894,Textiles,26839,271285,99
+234,London,1897,Railways,47192,142978,81
+235,Glasgow,1854,Coal Mining,37460,42122,43
+236,Edinburgh,1852,Shipbuilding,44422,149255,36
+237,Leeds,1843,Railways,31552,81665,42
+238,Glasgow,1870,Railways,3664,128756,44
+239,Edinburgh,1871,Textiles,2152,37719,113
+240,Leeds,1877,Shipbuilding,4747,79434,120
+241,Leeds,1838,Shipbuilding,15576,182019,118
+242,Glasgow,1851,Railways,7954,257543,133
+243,Manchester,1861,Railways,41450,75360,133
+244,Bristol,1872,Coal Mining,37189,103986,106
+245,London,1842,Textiles,28549,126630,112
+246,London,1864,Shipbuilding,12208,91558,31
+247,Bristol,1900,Steel,9139,280780,110
+248,Manchester,1866,Railways,17712,4884,52
+249,Glasgow,1882,Steel,36455,276998,57
+250,Glasgow,1837,Railways,5370,160204,41
+251,London,1844,Shipbuilding,28342,290750,62
+252,Liverpool,1895,Textiles,40151,91895,104
+253,Manchester,1884,Steel,6629,16851,60
+254,Manchester,1839,Coal Mining,15256,184196,62
+255,Glasgow,1879,Shipbuilding,13963,81287,115
+256,Leeds,1857,Steel,37387,274393,131
+257,Liverpool,1867,Railways,14120,291349,104
+258,Leeds,1840,Textiles,27735,154078,59
+259,Birmingham,1875,Railways,23918,181525,89
+260,London,1852,Textiles,12056,150414,89
+261,London,1856,Railways,29001,293899,120
+262,Leeds,1850,Steel,2731,171699,124
+263,Leeds,1870,Coal Mining,49200,158598,19
+264,Birmingham,1877,Railways,25065,246819,74
+265,Glasgow,1865,Steel,32127,113331,29
+266,Edinburgh,1898,Steel,15780,150900,19
+267,Manchester,1859,Railways,18642,226247,20
+268,Manchester,1841,Coal Mining,28230,205071,110
+269,Glasgow,1859,Textiles,47022,264361,70
+270,Edinburgh,1838,Steel,14670,221542,36
+271,Liverpool,1885,Steel,43683,221175,133
+272,Edinburgh,1883,Steel,44024,195074,49
+273,Bristol,1871,Steel,6949,23261,72
+274,Liverpool,1838,Railways,17010,201061,70
+275,Manchester,1855,Textiles,14978,112843,109
+276,Bristol,1871,Railways,40711,226841,45
+277,London,1884,Coal Mining,27003,273256,128
+278,Glasgow,1890,Textiles,26790,93774,29
+279,Leeds,1874,Shipbuilding,32413,151831,100
+280,Bristol,1855,Coal Mining,19123,182085,32
+281,Liverpool,1871,Railways,26803,104538,43
+282,Glasgow,1890,Steel,13209,57673,54
+283,Manchester,1888,Railways,6598,196471,145
+284,Manchester,1874,Railways,6075,77525,90
+285,Liverpool,1842,Railways,28342,150723,62
+286,Leeds,1886,Coal Mining,35423,261201,80
+287,Birmingham,1842,Shipbuilding,24937,223400,8
+288,Liverpool,1841,Steel,14985,69737,135
+289,Bristol,1885,Steel,20593,263359,96
+290,Manchester,1880,Railways,4770,182474,92
+291,Leeds,1838,Railways,20858,137753,71
+292,London,1847,Railways,33705,242741,70
+293,Edinburgh,1856,Railways,35778,270258,113
+294,Birmingham,1845,Coal Mining,39252,72141,30
+295,Manchester,1863,Coal Mining,21343,288684,102
+296,London,1886,Textiles,16597,174389,60
+297,Birmingham,1880,Textiles,25836,95540,67
+298,Leeds,1871,Coal Mining,45806,14612,31
+299,London,1840,Railways,232,78591,132
+300,Leeds,1847,Steel,26185,192166,86
+301,Glasgow,1892,Coal Mining,37815,77256,129
+302,Manchester,1839,Coal Mining,32661,250643,18
+303,Bristol,1855,Textiles,4778,247007,58
+304,London,1868,Shipbuilding,17406,242345,138
+305,Glasgow,1872,Steel,14934,32319,96
+306,Manchester,1865,Steel,140,273223,99
+307,Bristol,1885,Shipbuilding,26133,66292,94
+308,Bristol,1882,Textiles,36105,14108,104
+309,London,1875,Steel,17711,33988,117
+310,London,1842,Textiles,1908,240699,116
+311,Birmingham,1842,Textiles,44796,71582,52
+312,Edinburgh,1896,Railways,47030,142863,6
+313,Glasgow,1867,Shipbuilding,16559,124385,133
+314,Bristol,1886,Shipbuilding,24085,107964,13
+315,Birmingham,1875,Railways,47445,134730,48
+316,Liverpool,1882,Textiles,33381,76237,37
+317,Leeds,1868,Textiles,24900,15084,117
+318,Liverpool,1845,Steel,28492,164079,124
+319,Manchester,1885,Shipbuilding,6449,144822,133
+320,London,1843,Steel,23148,48817,64
+321,Birmingham,1851,Steel,15900,288362,47
+322,London,1839,Shipbuilding,2899,52022,5
+323,Leeds,1858,Steel,35033,176207,51
+324,Glasgow,1838,Shipbuilding,19333,195376,37
+325,Edinburgh,1856,Textiles,5686,194483,111
+326,Glasgow,1863,Textiles,31680,33758,129
+327,Bristol,1860,Coal Mining,25853,201465,106
+328,London,1882,Steel,3127,34829,25
+329,Leeds,1892,Steel,49144,155256,141
+330,Manchester,1844,Shipbuilding,30848,92329,147
+331,Birmingham,1862,Steel,25212,134208,85
+332,Liverpool,1862,Coal Mining,31939,106628,20
+333,Bristol,1845,Railways,24735,216210,144
+334,Leeds,1894,Railways,3337,130174,144
+335,Edinburgh,1849,Textiles,2292,156912,72
+336,London,1862,Coal Mining,4872,129895,103
+337,Glasgow,1868,Textiles,31598,269618,61
+338,Leeds,1843,Shipbuilding,31940,251504,123
+339,Edinburgh,1889,Railways,20738,119429,81
+340,Edinburgh,1871,Shipbuilding,17506,88817,89
+341,Edinburgh,1876,Coal Mining,2420,285408,50
+342,Leeds,1848,Textiles,25466,98691,148
+343,Glasgow,1864,Textiles,24839,78016,22
+344,Edinburgh,1881,Steel,14997,144782,63
+345,Birmingham,1885,Coal Mining,7101,59494,28
+346,Bristol,1892,Coal Mining,43867,204094,82
+347,Edinburgh,1888,Textiles,13953,167485,104
+348,Leeds,1862,Shipbuilding,19685,271307,38
+349,Edinburgh,1872,Steel,14278,136028,62
+350,Bristol,1884,Textiles,30743,284626,78
+351,Leeds,1887,Railways,24971,97036,38
+352,Birmingham,1862,Steel,10105,50256,37
+353,Manchester,1884,Steel,25354,249761,20
+354,Liverpool,1879,Textiles,41309,169658,8
+355,Bristol,1892,Railways,42561,149803,32
+356,Leeds,1890,Steel,5501,24394,115
+357,Liverpool,1896,Shipbuilding,48713,255775,54
+358,Edinburgh,1877,Textiles,10379,119560,52
+359,Leeds,1886,Shipbuilding,38034,252826,126
+360,Edinburgh,1850,Shipbuilding,17319,32443,7
+361,Liverpool,1863,Textiles,23561,52708,16
+362,Bristol,1865,Shipbuilding,43289,143995,119
+363,London,1839,Coal Mining,9760,264999,17
+364,London,1841,Railways,33988,284374,112
+365,Edinburgh,1849,Railways,15903,130042,69
+366,Liverpool,1853,Shipbuilding,32213,89026,16
+367,Leeds,1881,Railways,979,79375,20
+368,London,1852,Steel,39267,285919,87
+369,London,1870,Steel,2910,91301,66
+370,Liverpool,1872,Railways,44285,288895,61
+371,London,1900,Coal Mining,32239,230411,117
+372,Glasgow,1851,Coal Mining,43613,147608,113
+373,Bristol,1855,Textiles,10176,225462,36
+374,Liverpool,1858,Textiles,5045,249516,69
+375,Birmingham,1870,Steel,5107,117348,40
+376,Edinburgh,1865,Railways,43322,101942,86
+377,Liverpool,1846,Shipbuilding,21377,72984,40
+378,Leeds,1854,Textiles,48255,255841,51
+379,Bristol,1845,Railways,40552,89491,95
+380,Manchester,1883,Coal Mining,3117,174968,108
+381,Glasgow,1857,Railways,16372,257650,95
+382,Liverpool,1862,Coal Mining,3174,71368,81
+383,Bristol,1876,Textiles,16378,57347,88
+384,Birmingham,1860,Steel,40623,169707,75
+385,Glasgow,1842,Coal Mining,19226,6950,95
+386,Manchester,1895,Railways,27909,86364,59
+387,London,1893,Textiles,16830,254296,72
+388,Bristol,1843,Shipbuilding,6596,167852,135
+389,Manchester,1870,Textiles,45360,277486,46
+390,Manchester,1879,Textiles,20365,278501,73
+391,Glasgow,1871,Steel,40461,145327,79
+392,Leeds,1897,Steel,7239,136868,120
+393,London,1886,Coal Mining,32962,223807,104
+394,Manchester,1875,Coal Mining,17654,122803,36
+395,London,1865,Coal Mining,27537,299634,43
+396,Manchester,1847,Shipbuilding,9951,81996,24
+397,London,1878,Steel,25877,159853,149
+398,Liverpool,1882,Railways,17345,59662,88
+399,Birmingham,1873,Steel,47683,116355,104
+400,Birmingham,1865,Railways,32926,115812,20
+401,Manchester,1843,Shipbuilding,34643,37894,69
+402,Birmingham,1888,Shipbuilding,5575,108436,75
+403,Leeds,1850,Railways,47178,136443,19
+404,Birmingham,1851,Railways,20864,288811,23
+405,Manchester,1842,Coal Mining,37142,221730,57
+406,London,1885,Shipbuilding,43727,70178,30
+407,Edinburgh,1855,Steel,43985,129161,96
+408,Liverpool,1871,Railways,39455,39168,113
+409,Birmingham,1881,Coal Mining,34460,188882,63
+410,Manchester,1895,Coal Mining,16919,206257,43
+411,London,1863,Shipbuilding,31668,111704,128
+412,Leeds,1886,Coal Mining,12134,148874,46
+413,Leeds,1840,Coal Mining,23887,36202,80
+414,Glasgow,1870,Textiles,13137,189740,90
+415,Manchester,1867,Railways,2165,222218,134
+416,Leeds,1870,Textiles,10920,265695,142
+417,Edinburgh,1863,Steel,22206,259208,91
+418,Bristol,1887,Textiles,18709,284545,145
+419,Birmingham,1875,Steel,45766,236319,74
+420,Glasgow,1895,Steel,37288,72160,61
+421,Edinburgh,1878,Shipbuilding,37726,113392,97
+422,Leeds,1850,Textiles,46778,170675,34
+423,London,1898,Shipbuilding,16644,186453,135
+424,Liverpool,1860,Coal Mining,44220,139517,130
+425,Birmingham,1846,Shipbuilding,41091,215921,35
+426,London,1872,Textiles,3027,33301,39
+427,Manchester,1897,Shipbuilding,3867,154712,63
+428,Leeds,1882,Railways,27018,262852,81
+429,Manchester,1882,Railways,35947,121181,90
+430,Bristol,1854,Railways,8808,29637,85
+431,Liverpool,1847,Coal Mining,33023,88624,92
+432,Liverpool,1862,Textiles,34868,147355,85
+433,Birmingham,1885,Textiles,4237,211849,90
+434,London,1843,Railways,43846,291638,94
+435,Bristol,1894,Railways,3314,90363,24
+436,London,1894,Shipbuilding,48730,69368,149
+437,Glasgow,1883,Coal Mining,23322,169317,113
+438,Leeds,1837,Coal Mining,19740,169815,70
+439,Liverpool,1880,Shipbuilding,33191,211727,95
+440,Glasgow,1884,Railways,20041,261500,18
+441,Edinburgh,1870,Textiles,38019,276059,35
+442,Bristol,1861,Shipbuilding,37652,194769,49
+443,Glasgow,1874,Coal Mining,44460,200781,36
+444,Liverpool,1868,Railways,42460,85974,6
+445,Bristol,1884,Steel,18637,277991,148
+446,Liverpool,1877,Shipbuilding,18136,249744,131
+447,Bristol,1874,Railways,27561,144702,71
+448,Bristol,1885,Textiles,36411,160692,5
+449,Bristol,1840,Steel,11116,161470,5
+450,Leeds,1885,Steel,44847,265331,15
+451,Glasgow,1876,Textiles,26148,215806,21
+452,Bristol,1841,Textiles,26964,68986,16
+453,Leeds,1876,Textiles,11052,181680,27
+454,Glasgow,1843,Shipbuilding,46185,91641,68
+455,Manchester,1887,Shipbuilding,21463,90345,74
+456,Liverpool,1873,Railways,25313,288533,72
+457,Edinburgh,1884,Steel,31499,86620,115
+458,Bristol,1862,Steel,46791,297095,24
+459,Bristol,1848,Steel,42975,103707,75
+460,Manchester,1844,Coal Mining,18513,178778,56
+461,Bristol,1866,Coal Mining,48701,222647,60
+462,Leeds,1892,Textiles,48831,194261,149
+463,Manchester,1883,Steel,49894,262735,113
+464,Leeds,1850,Railways,9793,204992,15
+465,Edinburgh,1840,Railways,23622,156131,119
+466,Edinburgh,1876,Railways,44987,35745,111
+467,Manchester,1856,Coal Mining,28570,105438,31
+468,Bristol,1854,Coal Mining,40130,189150,60
+469,Bristol,1877,Shipbuilding,9816,95211,105
+470,Bristol,1846,Steel,30682,137623,129
+471,Bristol,1845,Steel,96,176001,117
+472,Bristol,1853,Steel,16517,238491,133
+473,Leeds,1849,Shipbuilding,14762,3032,8
+474,Manchester,1861,Railways,34754,138261,103
+475,Manchester,1846,Railways,1143,183041,33
+476,Edinburgh,1877,Shipbuilding,8004,65940,143
+477,London,1842,Shipbuilding,25740,172589,86
+478,Birmingham,1898,Steel,14617,190786,77
+479,Birmingham,1894,Shipbuilding,44690,149212,96
+480,Glasgow,1900,Steel,15965,15452,83
+481,Glasgow,1888,Textiles,12317,106944,87
+482,Bristol,1873,Steel,28378,291394,39
+483,Liverpool,1883,Textiles,33387,99955,124
+484,Leeds,1861,Coal Mining,3708,129110,116
+485,Edinburgh,1892,Coal Mining,36728,61450,97
+486,Bristol,1856,Steel,31435,95952,69
+487,Leeds,1900,Coal Mining,34477,231091,50
+488,Manchester,1856,Steel,31867,100798,41
+489,Leeds,1892,Shipbuilding,10094,3150,6
+490,London,1894,Shipbuilding,19606,187205,45
+491,Leeds,1844,Coal Mining,13433,59723,113
+492,Liverpool,1872,Coal Mining,16069,194340,100
+493,Glasgow,1876,Steel,38711,111150,112
+494,Leeds,1840,Textiles,37666,209303,118
+495,Liverpool,1853,Textiles,39301,110971,101
+496,Manchester,1874,Railways,26841,296142,113
+497,Leeds,1847,Coal Mining,17964,192478,71
+498,Edinburgh,1853,Coal Mining,32711,167396,23
+499,Birmingham,1863,Steel,27434,276972,9
+500,Bristol,1875,Coal Mining,5656,257674,24
+501,Leeds,1848,Steel,9598,145732,142
+502,London,1855,Coal Mining,14627,256193,98
+503,Manchester,1872,Steel,28813,297073,69
+504,London,1861,Textiles,28259,3387,43
+505,Edinburgh,1886,Shipbuilding,831,285929,27
+506,Edinburgh,1887,Shipbuilding,6014,271498,32
+507,Liverpool,1857,Coal Mining,42350,122454,94
+508,Manchester,1852,Textiles,17659,116385,123
+509,Bristol,1846,Shipbuilding,7309,262559,123
+510,Liverpool,1843,Shipbuilding,42010,131192,112
+511,Liverpool,1839,Steel,39385,182407,73
+512,Leeds,1860,Shipbuilding,5996,236871,141
+513,London,1898,Coal Mining,29665,215584,65
+514,Glasgow,1888,Textiles,4137,11615,148
+515,Leeds,1844,Steel,30942,123259,24
+516,Manchester,1840,Railways,45741,239769,149
+517,Manchester,1888,Coal Mining,37953,151876,97
+518,Edinburgh,1856,Steel,41097,11802,15
+519,Birmingham,1882,Steel,18321,208420,118
+520,Leeds,1876,Railways,18948,261336,120
+521,Manchester,1851,Textiles,33384,123037,48
+522,Liverpool,1842,Railways,8482,121911,139
+523,Leeds,1856,Railways,36657,121907,111
+524,Leeds,1883,Coal Mining,43061,230709,11
+525,Manchester,1892,Coal Mining,12186,68894,46
+526,Birmingham,1877,Shipbuilding,42627,203197,118
+527,London,1839,Steel,28477,251116,32
+528,Glasgow,1886,Coal Mining,3480,217830,104
+529,Edinburgh,1879,Steel,32305,32918,19
+530,Bristol,1879,Railways,35182,78650,119
+531,Edinburgh,1850,Coal Mining,10578,42810,149
+532,Glasgow,1861,Coal Mining,2483,29951,65
+533,Bristol,1869,Railways,32605,129579,19
+534,Bristol,1875,Steel,15216,51637,58
+535,Manchester,1842,Steel,20778,270921,85
+536,Leeds,1880,Textiles,14692,160106,59
+537,London,1892,Textiles,25044,2699,99
+538,Manchester,1864,Textiles,24661,22169,47
+539,Edinburgh,1879,Steel,2893,294615,147
+540,London,1837,Railways,9486,226035,119
+541,Manchester,1854,Shipbuilding,18576,41652,12
+542,Edinburgh,1895,Shipbuilding,22203,167140,55
+543,Bristol,1877,Shipbuilding,33725,180612,14
+544,Bristol,1875,Coal Mining,17419,203503,6
+545,Manchester,1852,Shipbuilding,16521,128572,138
+546,Glasgow,1863,Shipbuilding,18342,170879,115
+547,Bristol,1851,Railways,15757,266775,49
+548,Glasgow,1861,Textiles,43344,36981,8
+549,Liverpool,1839,Railways,37521,52546,64
+550,Birmingham,1862,Coal Mining,27519,280503,61
+551,Liverpool,1845,Textiles,24570,251664,56
+552,Leeds,1891,Steel,5826,287807,73
+553,London,1899,Steel,27766,115632,55
+554,Liverpool,1849,Coal Mining,16832,218926,141
+555,Edinburgh,1864,Railways,15037,285741,105
+556,Glasgow,1853,Railways,28681,197869,58
+557,Edinburgh,1887,Steel,20077,150752,22
+558,Glasgow,1856,Railways,23044,102216,123
+559,Glasgow,1879,Steel,46969,70107,64
+560,Glasgow,1891,Railways,5068,141791,71
+561,Glasgow,1893,Coal Mining,5543,146944,76
+562,Glasgow,1895,Railways,28414,284983,5
+563,Manchester,1893,Railways,3419,170691,101
+564,Liverpool,1885,Railways,21218,289466,13
+565,London,1896,Shipbuilding,18692,60484,68
+566,Birmingham,1877,Shipbuilding,41590,115652,76
+567,Leeds,1899,Steel,25461,142474,97
+568,Liverpool,1846,Coal Mining,47003,5270,116
+569,London,1849,Coal Mining,6580,98930,32
+570,Liverpool,1890,Shipbuilding,49736,270568,82
+571,Liverpool,1851,Steel,23087,286367,106
+572,Manchester,1900,Coal Mining,6204,256884,117
+573,Bristol,1854,Coal Mining,18142,157080,93
+574,Glasgow,1885,Railways,30874,279146,73
+575,Leeds,1841,Shipbuilding,43192,60799,17
+576,Edinburgh,1860,Coal Mining,7335,285582,16
+577,Glasgow,1887,Shipbuilding,16535,8961,15
+578,Birmingham,1876,Railways,6871,16105,61
+579,Birmingham,1895,Shipbuilding,10945,103633,82
+580,Leeds,1870,Railways,33667,83044,63
+581,Leeds,1842,Coal Mining,44184,140062,16
+582,Bristol,1864,Textiles,26649,294800,65
+583,Liverpool,1850,Coal Mining,18035,49323,120
+584,Manchester,1897,Coal Mining,48153,263697,102
+585,Liverpool,1858,Railways,36151,230919,11
+586,Leeds,1881,Coal Mining,10616,98149,96
+587,Liverpool,1872,Shipbuilding,16000,119276,147
+588,London,1851,Coal Mining,27852,14719,102
+589,Manchester,1855,Shipbuilding,32250,200265,92
+590,Leeds,1882,Textiles,8010,72304,74
+591,London,1893,Shipbuilding,46993,124942,18
+592,Liverpool,1892,Shipbuilding,28002,270859,74
+593,Birmingham,1892,Railways,49031,277060,57
+594,Liverpool,1852,Railways,19623,85268,86
+595,Birmingham,1898,Railways,27805,78728,107
+596,London,1879,Shipbuilding,9842,79499,120
+597,Liverpool,1884,Coal Mining,9998,64742,93
+598,Liverpool,1899,Railways,17746,165870,91
+599,London,1853,Coal Mining,4400,149753,22
+600,Birmingham,1879,Coal Mining,49517,155195,128
+601,Leeds,1873,Coal Mining,1832,246621,73
+602,Glasgow,1865,Railways,49873,99018,112
+603,London,1891,Coal Mining,647,185623,75
+604,Liverpool,1837,Textiles,46844,274819,139
+605,Manchester,1879,Shipbuilding,44913,166756,49
+606,Liverpool,1867,Railways,46538,234362,35
+607,London,1877,Steel,18113,36022,57
+608,Liverpool,1877,Coal Mining,26738,20575,27
+609,Birmingham,1882,Shipbuilding,35499,180098,58
+610,Bristol,1847,Steel,37321,246493,54
+611,Glasgow,1893,Steel,35224,219274,95
+612,Birmingham,1861,Shipbuilding,10637,137098,82
+613,Leeds,1855,Textiles,45787,215502,13
+614,Liverpool,1891,Shipbuilding,22317,168479,52
+615,Bristol,1870,Coal Mining,38404,214326,145
+616,Leeds,1878,Coal Mining,9066,75154,119
+617,Glasgow,1843,Coal Mining,6191,211800,42
+618,Manchester,1872,Steel,39005,171673,14
+619,Leeds,1894,Railways,37358,195809,38
+620,Leeds,1900,Textiles,16192,124693,97
+621,London,1882,Shipbuilding,4311,295477,143
+622,London,1839,Steel,48898,4213,135
+623,Manchester,1891,Coal Mining,8338,299817,147
+624,London,1884,Shipbuilding,42265,274549,95
+625,Leeds,1853,Textiles,29402,51175,8
+626,Bristol,1867,Railways,7635,28699,24
+627,Edinburgh,1898,Coal Mining,25426,295922,60
+628,Glasgow,1887,Railways,6033,87144,79
+629,Glasgow,1897,Steel,9361,41894,55
+630,Bristol,1883,Railways,33102,113884,120
+631,Leeds,1887,Coal Mining,13025,76431,137
+632,Glasgow,1900,Coal Mining,16123,297569,8
+633,London,1854,Textiles,28965,263745,14
+634,Manchester,1868,Steel,13387,179843,110
+635,Leeds,1896,Textiles,35977,211366,111
+636,Edinburgh,1893,Railways,22227,166713,129
+637,Manchester,1858,Shipbuilding,10786,161229,136
+638,London,1869,Coal Mining,13524,243806,83
+639,London,1898,Textiles,18647,24845,29
+640,Edinburgh,1860,Coal Mining,28683,118152,74
+641,Birmingham,1886,Shipbuilding,48798,238085,45
+642,Bristol,1898,Coal Mining,40908,131229,77
+643,Leeds,1896,Railways,25599,200485,147
+644,Bristol,1865,Shipbuilding,18712,88214,13
+645,Manchester,1864,Steel,38286,224094,117
+646,Leeds,1848,Textiles,47515,280520,40
+647,Liverpool,1846,Coal Mining,3428,101927,136
+648,Glasgow,1840,Railways,35811,161478,130
+649,Bristol,1853,Textiles,40650,135914,5
+650,Manchester,1888,Coal Mining,33781,55208,53
+651,Edinburgh,1846,Railways,16074,12541,52
+652,Manchester,1856,Shipbuilding,11766,92539,101
+653,Bristol,1840,Steel,12283,53685,53
+654,Birmingham,1869,Coal Mining,6518,5570,140
+655,Manchester,1885,Coal Mining,1890,34187,137
+656,Manchester,1846,Coal Mining,38298,111842,35
+657,Manchester,1879,Steel,812,5442,118
+658,Liverpool,1877,Coal Mining,5876,274682,146
+659,Bristol,1851,Steel,15465,55672,8
+660,Glasgow,1894,Steel,49402,182016,87
+661,Birmingham,1874,Shipbuilding,48223,292514,33
+662,Edinburgh,1884,Textiles,22898,105383,85
+663,Glasgow,1896,Railways,4205,182743,54
+664,Bristol,1861,Steel,20798,40157,147
+665,Bristol,1857,Textiles,41965,200537,112
+666,Birmingham,1870,Steel,24444,15219,105
+667,Manchester,1857,Shipbuilding,20916,107627,108
+668,Edinburgh,1861,Shipbuilding,11941,197845,102
+669,Birmingham,1875,Shipbuilding,42304,148030,67
+670,Birmingham,1844,Shipbuilding,25505,180274,94
+671,Liverpool,1849,Textiles,35235,38140,121
+672,Bristol,1899,Coal Mining,26642,90454,84
+673,Liverpool,1847,Railways,17848,252076,119
+674,Birmingham,1845,Steel,15542,100570,46
+675,Glasgow,1888,Coal Mining,4340,267289,74
+676,Edinburgh,1838,Textiles,31327,174196,62
+677,Manchester,1865,Textiles,19723,196894,55
+678,Manchester,1887,Railways,9339,94947,81
+679,Liverpool,1865,Railways,35372,161068,107
+680,Manchester,1875,Shipbuilding,15024,244000,30
+681,Edinburgh,1853,Coal Mining,31562,27440,11
+682,London,1865,Textiles,39297,203785,42
+683,Bristol,1883,Coal Mining,320,208288,107
+684,Liverpool,1842,Steel,30845,223985,53
+685,Leeds,1870,Shipbuilding,19676,127745,100
+686,Manchester,1841,Coal Mining,25377,190330,114
+687,Birmingham,1875,Steel,22994,262362,13
+688,London,1897,Railways,38848,235298,130
+689,Edinburgh,1880,Shipbuilding,21020,246691,126
+690,Edinburgh,1883,Shipbuilding,2116,139940,99
+691,Glasgow,1847,Steel,30032,92889,7
+692,Liverpool,1900,Shipbuilding,683,191374,131
+693,London,1868,Textiles,46815,23572,127
+694,Glasgow,1857,Shipbuilding,24853,162836,87
+695,Glasgow,1880,Coal Mining,43869,6738,60
+696,Glasgow,1865,Railways,9120,139638,37
+697,Manchester,1844,Coal Mining,5255,245314,89
+698,Liverpool,1865,Steel,15944,219505,70
+699,Bristol,1859,Shipbuilding,24065,246745,18
+700,London,1847,Railways,49619,146559,124
+701,Edinburgh,1842,Railways,42218,297927,74
+702,Bristol,1889,Shipbuilding,48019,268758,136
+703,Birmingham,1898,Coal Mining,6162,101788,10
+704,Edinburgh,1899,Textiles,18066,123451,137
+705,Birmingham,1851,Steel,4643,187722,105
+706,Liverpool,1839,Shipbuilding,35342,7945,127
+707,Glasgow,1868,Textiles,11695,177013,56
+708,London,1857,Shipbuilding,9015,83549,107
+709,Liverpool,1843,Steel,5702,169372,134
+710,Liverpool,1847,Coal Mining,36271,7724,16
+711,Manchester,1881,Coal Mining,48827,101866,125
+712,Edinburgh,1887,Steel,39575,230538,88
+713,Edinburgh,1893,Steel,45656,120475,84
+714,Birmingham,1841,Coal Mining,3907,93933,69
+715,Glasgow,1840,Coal Mining,4408,25359,43
+716,London,1881,Shipbuilding,24054,228202,93
+717,Leeds,1897,Textiles,23804,24579,111
+718,Bristol,1884,Shipbuilding,25744,279543,120
+719,Liverpool,1840,Railways,3124,259216,149
+720,Birmingham,1865,Textiles,43936,259727,103
+721,Leeds,1853,Textiles,29124,130786,93
+722,Leeds,1852,Steel,31850,201322,19
+723,Manchester,1896,Shipbuilding,16220,94549,97
+724,Manchester,1856,Textiles,7761,250356,88
+725,Manchester,1844,Textiles,13926,27170,141
+726,Edinburgh,1847,Steel,18532,116337,131
+727,Bristol,1895,Coal Mining,48526,94818,88
+728,Manchester,1840,Railways,12694,201858,21
+729,Bristol,1896,Coal Mining,32612,102323,46
+730,Leeds,1873,Textiles,5230,274032,25
+731,Glasgow,1853,Railways,20181,19221,115
+732,London,1895,Coal Mining,3458,268658,82
+733,Liverpool,1886,Coal Mining,36635,160231,67
+734,Manchester,1849,Shipbuilding,5965,277662,21
+735,Liverpool,1866,Shipbuilding,38661,192750,37
+736,Birmingham,1881,Railways,5247,240285,130
+737,Edinburgh,1874,Railways,5843,296798,14
+738,Glasgow,1885,Textiles,48831,205991,25
+739,Manchester,1867,Shipbuilding,55,119639,84
+740,Leeds,1867,Steel,2779,57299,20
+741,Bristol,1879,Textiles,29287,229195,113
+742,London,1846,Steel,48778,149108,17
+743,Manchester,1851,Shipbuilding,1332,215621,100
+744,Glasgow,1852,Coal Mining,39675,224399,49
+745,Manchester,1844,Coal Mining,5121,227557,51
+746,Leeds,1875,Textiles,31601,282621,124
+747,Birmingham,1859,Railways,20591,104011,60
+748,London,1879,Shipbuilding,25842,213737,82
+749,Manchester,1855,Steel,25694,264087,87
+750,London,1860,Steel,44692,72544,137
+751,Glasgow,1853,Textiles,33488,205782,74
+752,Edinburgh,1889,Textiles,45720,224200,13
+753,London,1899,Shipbuilding,32995,259065,135
+754,Birmingham,1893,Coal Mining,7824,191465,39
+755,London,1843,Textiles,46728,90258,84
+756,Bristol,1879,Shipbuilding,14592,90347,39
+757,London,1886,Coal Mining,35817,1769,101
+758,Glasgow,1881,Railways,38485,148853,8
+759,Edinburgh,1893,Railways,19378,275357,63
+760,Bristol,1898,Railways,39935,110983,62
+761,Glasgow,1896,Steel,17650,78361,90
+762,Glasgow,1894,Railways,26400,9312,60
+763,Edinburgh,1859,Shipbuilding,4206,222147,41
+764,Leeds,1867,Textiles,2938,254916,75
+765,Bristol,1867,Coal Mining,20224,103620,90
+766,Bristol,1880,Shipbuilding,30522,298741,126
+767,Bristol,1875,Coal Mining,43811,33847,19
+768,Leeds,1847,Textiles,17907,65411,122
+769,Liverpool,1886,Steel,3508,267022,19
+770,London,1899,Textiles,40257,177090,99
+771,Manchester,1890,Textiles,28871,84134,64
+772,Edinburgh,1838,Textiles,41952,44959,113
+773,Edinburgh,1876,Coal Mining,27956,77962,103
+774,Bristol,1858,Textiles,29715,102628,101
+775,Leeds,1891,Shipbuilding,38009,159344,101
+776,Leeds,1882,Railways,42786,190233,59
+777,Birmingham,1865,Railways,44991,173445,28
+778,Glasgow,1844,Shipbuilding,5302,123709,75
+779,London,1879,Steel,42460,15182,111
+780,Bristol,1858,Railways,43768,255546,60
+781,Bristol,1869,Coal Mining,2780,261328,53
+782,Leeds,1851,Steel,27437,110961,91
+783,London,1878,Textiles,5886,8043,101
+784,London,1861,Steel,35219,77541,134
+785,Birmingham,1887,Textiles,49406,125559,89
+786,Manchester,1847,Railways,26736,285355,146
+787,Manchester,1880,Textiles,13733,44171,67
+788,Manchester,1845,Steel,24286,140013,106
+789,Liverpool,1893,Textiles,19733,191682,67
+790,Birmingham,1849,Shipbuilding,28159,61419,39
+791,Birmingham,1887,Textiles,8968,239995,39
+792,Glasgow,1895,Shipbuilding,21609,172747,56
+793,Bristol,1863,Coal Mining,11901,68319,143
+794,Liverpool,1842,Shipbuilding,12947,59014,90
+795,Glasgow,1887,Steel,19787,150154,99
+796,London,1897,Coal Mining,796,100139,134
+797,Glasgow,1888,Steel,1088,254152,11
+798,Manchester,1839,Coal Mining,19614,233339,81
+799,Edinburgh,1862,Coal Mining,22186,164040,64
+800,Manchester,1864,Shipbuilding,25297,288228,80
+801,Glasgow,1873,Coal Mining,9870,214602,122
+802,Birmingham,1880,Steel,34592,85325,81
+803,Liverpool,1888,Steel,35328,60241,53
+804,Glasgow,1892,Coal Mining,45220,17815,138
+805,Bristol,1889,Coal Mining,49312,276772,51
+806,Liverpool,1894,Textiles,39861,38933,89
+807,Birmingham,1890,Textiles,5685,149306,20
+808,Glasgow,1890,Coal Mining,5290,36017,21
+809,Glasgow,1871,Coal Mining,33031,157825,120
+810,Birmingham,1882,Railways,18953,222977,69
+811,Liverpool,1884,Textiles,11993,41686,108
+812,Leeds,1898,Shipbuilding,35226,259743,105
+813,Birmingham,1867,Steel,20659,98807,109
+814,Leeds,1894,Shipbuilding,21494,279012,42
+815,Manchester,1900,Textiles,9564,5093,116
+816,Liverpool,1879,Textiles,5570,68435,34
+817,Glasgow,1849,Railways,4930,269625,80
+818,Liverpool,1837,Railways,6432,151175,95
+819,Bristol,1889,Shipbuilding,1286,1360,139
+820,Edinburgh,1856,Railways,34443,205629,113
+821,Leeds,1839,Railways,42418,288314,34
+822,Manchester,1849,Coal Mining,20786,30193,87
+823,Bristol,1867,Coal Mining,9015,231272,80
+824,Glasgow,1860,Railways,4859,284350,141
+825,Manchester,1838,Steel,27815,185292,111
+826,London,1843,Steel,23540,65155,20
+827,Bristol,1850,Coal Mining,46214,39062,133
+828,Edinburgh,1861,Steel,38025,136289,78
+829,Birmingham,1854,Steel,12063,184333,109
+830,Liverpool,1890,Coal Mining,16589,21566,140
+831,Bristol,1886,Steel,28524,174110,133
+832,Bristol,1876,Shipbuilding,24668,89632,147
+833,Edinburgh,1888,Shipbuilding,9822,25013,55
+834,London,1855,Textiles,303,79542,76
+835,London,1887,Steel,33368,234346,103
+836,Manchester,1865,Shipbuilding,16062,185760,29
+837,Liverpool,1850,Shipbuilding,16572,194945,39
+838,London,1864,Shipbuilding,38035,149920,149
+839,Birmingham,1891,Railways,44370,174736,15
+840,Manchester,1881,Coal Mining,44481,126070,59
+841,Edinburgh,1847,Steel,38242,13003,14
+842,Leeds,1872,Shipbuilding,29904,255520,144
+843,Leeds,1839,Textiles,1608,68613,24
+844,Glasgow,1900,Railways,48869,252390,89
+845,Liverpool,1848,Railways,13667,287147,27
+846,Manchester,1861,Coal Mining,25562,5437,98
+847,Edinburgh,1877,Steel,37374,143140,92
+848,Bristol,1887,Textiles,26854,89666,68
+849,Glasgow,1898,Steel,3241,162048,122
+850,Leeds,1856,Shipbuilding,25150,170048,74
